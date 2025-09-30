@@ -3,18 +3,19 @@ name: Deploy HTML to GitHub Pages
 on:
   push:
     branches:
-      - feature/**
+      - '**'  # 모든 브랜치에서 push 시 실행
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy HTML
+      - name: Deploy HTML to gh-pages
         uses: peaceiris/actions-gh-pages@v6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./   # HTML 파일 있는 위치
+          publish_dir: ./   # HTML 파일 있는 경로
+
 
