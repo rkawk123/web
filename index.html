@@ -58,6 +58,17 @@
   <meta charset="UTF-8" />
   <title>이미지 분류기 (DenseNet)</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .info-box {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fafafa;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
   <h1>이미지 분류기</h1>
@@ -73,6 +84,9 @@
 
     <!-- 미리보기 -->
     <img id="preview" />
+
+    <!-- 추가: 이미지 정보 -->
+    <div id="info" class="info-box" style="display:none;"></div>
 
     <!-- 결과 -->
     <pre id="result"></pre>
@@ -90,8 +104,8 @@
     const dropArea = document.getElementById("drop-area");
     const fileInput = document.getElementById("file");
     const preview = document.getElementById("preview");
+    const infoBox = document.getElementById("info");
 
-    // 드래그 시 스타일 강조
     ["dragenter", "dragover"].forEach(eventName => {
       dropArea.addEventListener(eventName, e => {
         e.preventDefault();
@@ -108,7 +122,6 @@
       }, false);
     });
 
-    // 드롭된 파일 처리
     dropArea.addEventListener("drop", e => {
       const files = e.dataTransfer.files;
       if (files.length > 0) {
@@ -117,7 +130,6 @@
       }
     });
 
-    // 파일 선택 시 미리보기
     fileInput.addEventListener("change", e => {
       if (fileInput.files.length > 0) {
         showPreview(fileInput.files[0]);
@@ -128,11 +140,24 @@
       const reader = new FileReader();
       reader.onload = e => {
         preview.src = e.target.result;
+
+        // 이미지 정보 표시
+        const img = new Image();
+        img.onload = () => {
+          infoBox.style.display = "block";
+          infoBox.innerHTML = `
+            <b>파일명:</b> ${file.name}<br>
+            <b>파일 크기:</b> ${(file.size / 1024).toFixed(1)} KB<br>
+            <b>해상도:</b> ${img.width} x ${img.height}px
+          `;
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
   </script>
 </body>
 </html>
+
 
 
