@@ -18,8 +18,8 @@ $btn.addEventListener("click", async () => {
   const fd = new FormData();
   fd.append("file", f);
   
-  result.textContent = "";
   loader.style.display = "block"; // 🔵 로딩 보이기
+  result.textContent = "";
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
