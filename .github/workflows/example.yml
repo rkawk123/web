@@ -1,17 +1,38 @@
-name: Example Workflow
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - '**'   # 모든 브랜치에서 push 시 실행
-  pull_request:
-    branches:
-      - '**'   # 모든 브랜치에서 PR 시 실행
+      - feature/**   # feature 브랜치에서 push 시 실행
+  workflow_dispatch: # 수동 실행 가능
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Say hello
-        run: echo "Hello from ${{ github.ref }}"
+      # 1. 코드 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Node.js (예: React, Vue) 설치
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. 패키지 설치
+      - name: Install dependencies
+        run: npm install
+
+      # 4. 빌드
+      - name: Build
+        run: npm run build   # 프로젝트에 맞게 수정
+
+      # 5. gh-pages 브랜치로 배포
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build   # 빌드 결과물 위치 (React 기준)
+
