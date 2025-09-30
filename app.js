@@ -17,7 +17,9 @@ $btn.addEventListener("click", async () => {
 
   const fd = new FormData();
   fd.append("file", f);
-  $result.textContent = "예측 중...";
+  
+  result.textContent = "";
+  loader.style.display = "block"; // 🔵 로딩 보이기
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
@@ -28,5 +30,7 @@ $btn.addEventListener("click", async () => {
       `Label: ${json.label}\nIndex: ${json.class_index}\nConfidence: ${(json.confidence * 100).toFixed(2)}%`;
   } catch (e) {
     $result.textContent = "에러: " + e.message;
+  } finally {
+    loader.style.display = "none"; // 🔴 로딩 숨기기
   }
 });
