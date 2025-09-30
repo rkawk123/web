@@ -3,7 +3,7 @@ name: Deploy HTML to GitHub Pages
 on:
   push:
     branches:
-      - '**'  # 모든 브랜치에서 push 시 실행
+      - '**'  # 모든 브랜치 push 시 실행
 
 jobs:
   deploy:
@@ -16,6 +16,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./   # HTML 파일 있는 경로
+          publish_dir: ./   # HTML 파일 있는 루트
 
 
