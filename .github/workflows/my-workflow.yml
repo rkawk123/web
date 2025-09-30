@@ -4,13 +4,11 @@ on:
   push:
     branches:
       
-''   # 모든 브랜치에서 push 시 실행
+# 모든 브랜치에서 push 시 실행
 pull_request:
   branches:
-    
-'
-'   # 모든 브랜치에서 PR 시 실행
-
+  
+# 모든 브랜치에서 PR 시 실행
 jobs:
   build:
     runs-on: ubuntu-latest
