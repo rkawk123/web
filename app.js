@@ -71,14 +71,14 @@ $btn.addEventListener("click", async () => {
   }
 });
 */
-const API = "https://backend-6i2t.onrender.com/predict";  
+const API = "https://backend-6i2t.onrender.com/predict";
 
 const $dropArea = document.getElementById("drop-area");
 const $file = document.getElementById("file");
 const $preview = document.getElementById("preview");
 const $btn = document.getElementById("btn");
 const $result = document.getElementById("result");
-const $loader = document.getElementById("loader");
+const $loader = document.getElementById("loading");
 
 // 드래그 앤 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -105,7 +105,7 @@ $dropArea.addEventListener("drop", e => {
   }
 });
 
-// 파일 선택 시 미리보기
+// 파일 선택 시 미리보기 # 메모리 적게 차지
 $file.addEventListener("change", () => {
   if ($file.files.length > 0) {
     showPreview($file.files[0]);
@@ -123,19 +123,19 @@ function showPreview(file) {
 //서버 업로드 & 예측
 $btn.addEventListener("click", async () => {
   const f = $file.files[0];
-  if (!f) { 
-    alert("이미지를 선택하세요!"); 
-    return; 
+  if (!f) {
+    alert("이미지를 선택하세요!");
+    return;
   }
 
   const fd = new FormData();
   fd.append("file", f);
 
   // 로딩 시작
-  $loader.style.display = "block";
+  $loader.style.display = "inline-block";
   $result.textContent = "";
 
-  await new Promise(r => requestAnimationFrame(r));
+  //await new Promise(r => requestAnimationFrame(r));
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
@@ -158,7 +158,8 @@ $btn.addEventListener("click", async () => {
     $result.textContent = "에러: " + e.message;
   } finally {
     // 요청 끝나면 로딩 숨김
-    $loading.style.display = "none";
+    $loader.style.display = "none";
   }
 });
+
 
