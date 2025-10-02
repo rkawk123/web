@@ -88,53 +88,6 @@
   </div>
 
   <script src="app.js"></script>
-  <script>
-    // 드래그 앤 드롭 이벤트 처리
-    const dropArea = document.getElementById("drop-area");
-    const fileInput = document.getElementById("file");
-    const preview = document.getElementById("preview");
-
-    // 드래그 시 스타일 강조
-    ["dragenter", "dragover"].forEach(eventName => {
-      dropArea.addEventListener(eventName, e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropArea.classList.add("highlight");
-      }, false);
-    });
-
-    ["dragleave", "drop"].forEach(eventName => {
-      dropArea.addEventListener(eventName, e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropArea.classList.remove("highlight");
-      }, false);
-    });
-
-    // 드롭된 파일 처리
-    dropArea.addEventListener("drop", e => {
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        fileInput.files = files;
-        showPreview(files[0]);
-      }
-    });
-
-    // 파일 선택 시 미리보기
-    fileInput.addEventListener("change", e => {
-      if (fileInput.files.length > 0) {
-        showPreview(fileInput.files[0]);
-      }
-    });
-
-    function showPreview(file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        preview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  </script>
 </body>
 </html>
 
