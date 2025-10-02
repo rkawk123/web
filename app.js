@@ -133,21 +133,30 @@ $btn.addEventListener("click", async () => {
 
   // 로딩 시작
   $loader.style.display = "block";
-  $result.textContent = "예측 중입니다...";
+  $result.textContent = "";
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || "요청 실패");
 
-    // 결과 표시
-    $result.textContent =
-      `Label: ${json.label}\nIndex: ${json.class_index}\nConfidence: ${(json.confidence * 100).toFixed(2)}%`;
+    // 백엔드 predictions 배열 구조에 맞춰 출력
+    if (json.predictions && json.predictions.length > 0) {
+      let text = "Top Predictions:\n";
+      json.predictions.forEach((p, idx) => {
+        text += `${idx + 1}. Label: ${p.label}\n`;
+      });
+      $result.textContent = text;
+    } else if (json.error) {
+      $result.textContent = "백엔드 에러: " + json.error;
+    } else {
+      $result.textContent = "예측 결과를 받지 못했습니다.";
+    }
   } catch (e) {
     $result.textContent = "에러: " + e.message;
   } finally {
-    // 로딩 종료
-    $loader.style.display = "none";
+    // 요청 끝나면 로딩 숨김
+    $loading.style.display = "none";
   }
 });
 
