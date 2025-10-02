@@ -113,6 +113,30 @@
   background-color: navy;
 }
 
+#loading {
+  display: none; /* 초기 숨김 */
+  font-weight: bold;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* From Uiverse.io by kat_2522 */ 
 .loader {
   display: none;
@@ -188,3 +212,4 @@
     clip-path: inset(0 0 0 0);
   }
 }
+*/
