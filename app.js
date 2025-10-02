@@ -135,6 +135,8 @@ $btn.addEventListener("click", async () => {
   $loader.style.display = "block";
   $result.textContent = "";
 
+  await new Promise(r => requestAnimationFrame(r));
+
   try {
     const res = await fetch(API, { method: "POST", body: fd });
     const json = await res.json();
