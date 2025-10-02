@@ -115,6 +115,7 @@
 
 /* From Uiverse.io by kat_2522 */ 
 .loader {
+  display: none;
   max-width: fit-content;
   color: rgb(242, 255, 240);
   font-size: 50px;
