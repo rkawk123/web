@@ -1,50 +1,9 @@
-<!--
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <title>이미지 분류기 (DenseNet)</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <h1>이미지 분류기</h1>
-
-  <!-- 메인 박스 
-  <div class="container">
-    <!-- 업로드 영역 
-    <div class="header" id="drop-area">
-      <input type="file" id="file" accept="image/*" />
-      <label for="file" class="upload-btn">이미지 업로드</label>
-      <p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>
-    </div>
-
-    <!-- 미리보기 
-    <img id="preview" />
-
-    <!-- 결과 
-    <pre id="result"></pre>
-    
-    <!-- 로딩 표시 
-    <p class="loader"><span>Scan</span></p>
-
-    <!-- 하단 버튼 
-    <div class="footer">
-      <p>예측하기</p>
-      <button id="btn" class="predict-btn">▶</button>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
--->
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <title>이미지 분류기 (DenseNet)</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="st.css">
 </head>
 <body>
   <h1>이미지 분류기</h1>
@@ -59,13 +18,16 @@
     </div>
 
     <!-- 미리보기 -->
-    <img id="preview" />
+    <div class="preview-wrapper">
+      <img id="preview" />
+      <div class="scan-line" id="scan-line"></div>
+    </div>
+
 
     <!-- 결과 -->
     <pre id="result"></pre>
 
     <!-- 로딩 표시 -->
-    <!--<p class="loader"><span>Scan</span></p>-->
     <div class="footer">
       <button id="btn" class="predict-btn">▶ 예측하기</button>
       <span id="loading">
@@ -74,13 +36,7 @@
       </span>
     </div>
 
-    <!-- 하단 버튼
-    <div class="footer">
-      <p>예측하기</p>
-      <button id="btn" class="predict-btn">▶</button>
-    </div>-->
-
-    <script src="app.js"></script>
+    <script src="scri.js"></script>
 </body>
 </html>
 
