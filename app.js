@@ -1,76 +1,3 @@
-/*
-// const API = "https://backend-fgai.onrender.com/predict"; // 기존
-const API = "https://backend-6i2t.onrender.com/predict";
-
-const $file = document.getElementById("file");
-const $btn = document.getElementById("btn");
-const $result = document.getElementById("result");
-const $preview = document.getElementById("preview");
-
-$file.addEventListener("change", () => {
-  const f = $file.files[0];
-  if (f) $preview.src = URL.createObjectURL(f);
-});
-
-$btn.addEventListener("click", async () => {
-  const f = $file.files[0];
-  if (!f) { alert("이미지를 선택하세요!"); return; }
-
-  const fd = new FormData();
-  fd.append("file", f);
-  
-  loader.style.display = "block"; // 🔵 로딩 보이기
-  result.textContent = "";
-
-  try {
-    const res = await fetch(API, { method: "POST", body: fd });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || "요청 실패");
-
-    $result.textContent =
-      `Label: ${json.label}\nIndex: ${json.class_index}\nConfidence: ${(json.confidence * 100).toFixed(2)}%`;
-  } catch (e) {
-    $result.textContent = "에러: " + e.message;
-  } finally {
-    loader.style.display = "none"; // 🔴 로딩 숨기기
-  }
-});
-#
-const $file = document.getElementById("file");
-const $btn = document.getElementById("btn");
-const $result = document.getElementById("result");
-const $preview = document.getElementById("preview");
-const loader = document.getElementById("loader"); // 👈 추가
-
-$file.addEventListener("change", () => {
-  const f = $file.files[0];
-  if (f) $preview.src = URL.createObjectURL(f);
-});
-
-$btn.addEventListener("click", async () => {
-  const f = $file.files[0];
-  if (!f) { alert("이미지를 선택하세요!"); return; }
-
-  const fd = new FormData();
-  fd.append("file", f);
-  
-  $result.textContent = "";
-  loader.style.display = "block"; // 🔵 로딩 보이기
-
-  try {
-    const res = await fetch(API, { method: "POST", body: fd });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || "요청 실패");
-
-    $result.textContent =
-      `Label: ${json.label}\nIndex: ${json.class_index}\nConfidence: ${(json.confidence * 100).toFixed(2)}%`;
-  } catch (e) {
-    $result.textContent = "에러: " + e.message;
-  } finally {
-    loader.style.display = "none"; // 🔴 로딩 숨기기
-  }
-});
-*/
 const API = "https://backend-6i2t.onrender.com/predict";
 
 const $dropArea = document.getElementById("drop-area");
@@ -79,6 +6,7 @@ const $preview = document.getElementById("preview");
 const $btn = document.getElementById("btn");
 const $result = document.getElementById("result");
 const $loader = document.getElementById("loading");
+const $scanLine = document.querySelector(".scan-line");
 
 // 드래그 앤 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -115,6 +43,11 @@ $file.addEventListener("change", () => {
 function showPreview(file) {
   const reader = new FileReader();
   reader.onload = e => {
+    $preview.onload = () => {
+      // 이미지 로드된 후 scan-line 크기 맞춤
+      const scanLine = document.getElementById("scan-line");
+      scanLine.style.width = $preview.clientWidth + "px";
+    };
     $preview.src = e.target.result;
   };
   reader.readAsDataURL(file);
@@ -133,9 +66,8 @@ $btn.addEventListener("click", async () => {
 
   // 로딩 시작
   $loader.style.display = "inline-block";
+  $scanLine.style.display = "block"; //스캔 시작
   $result.textContent = "";
-
-  //await new Promise(r => requestAnimationFrame(r));
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
@@ -159,7 +91,9 @@ $btn.addEventListener("click", async () => {
   } finally {
     // 요청 끝나면 로딩 숨김
     $loader.style.display = "none";
+    $scanLine.style.display = "none"; //스캔 종료
   }
 });
+
 
 
