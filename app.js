@@ -171,4 +171,15 @@ $cameraBtn.addEventListener("click", async () => {
 });
 
 
+// 5분마다 서버에 ping 보내기
+setInterval(async () => {
+  try {
+    const res = await fetch("https://backend-6i2t.onrender.com/ping");
+    if (res.ok) {
+      console.log("서버 ping 성공");
+    }
+  } catch (err) {
+    console.warn("서버 ping 실패:", err);
+  }
+}, 5 * 60 * 1000); // 5분 = 300,000 ms
 
