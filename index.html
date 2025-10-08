@@ -2,11 +2,14 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>이미지 분류기 (DenseNet)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>이미지 분류기</h1>
+  <!-- 래퍼: 제목 + 박스 -->
+  <div class="wrapper">
+    <h1>이미지 분류기</h1>
 
   <!-- 메인 박스 -->
   <div class="container">
@@ -14,6 +17,8 @@
     <div class="header" id="drop-area">
       <input type="file" id="file" accept="image/*" />
       <label for="file" class="upload-btn">이미지 업로드</label>
+      <!-- 카메라 촬영 버튼 -->
+      <button id="camera-btn" class="camera-btn">📷 카메라로 촬영</button>
       <p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>
     </div>
 
@@ -23,9 +28,9 @@
       <div class="scan-line" id="scan-line"></div>
     </div>
 
-
     <!-- 결과 -->
     <pre id="result"></pre>
+    <div id="resultText"></div>
 
     <!-- 로딩 표시 -->
     <div class="footer">
@@ -35,8 +40,9 @@
         <span class="loader"></span>
       </span>
     </div>
+  </div>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
 
