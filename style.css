@@ -231,6 +231,15 @@ h1 {
 
 /* 모바일 화면용 반응형 */
 @media (max-width: 480px) {
+  .header {
+    border: none;
+    background-color: transparent;
+  }
+
+  .header p {
+    display: none;
+  }
+
   body {
     padding-top: 20px;
   }
