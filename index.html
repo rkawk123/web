@@ -55,46 +55,60 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>이미지 분류기 (DenseNet)</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>스마트 원단 분석 · 이미지 분류기 (DenseNet)</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <h1>이미지 분류기</h1>
-
-  <!-- 메인 박스 -->
-  <div class="container">
-    <!-- 업로드 영역 -->
-    <div class="header" id="drop-area">
-      <input type="file" id="file" accept="image/*" />
-      <label for="file" class="upload-btn">이미지 업로드</label>
-      <p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>
+  <!-- 헤더: 로고+메뉴바 -->
+  <header>
+    <div class="logo">
+      <span class="dot"></span><span class="dot"></span>
+      <span class="brand">SMART TEXTURE</span>
     </div>
-
-    <!-- 미리보기 -->
-    <img id="preview" />
-
-    <!-- 결과 -->
-    <pre id="result"></pre>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">프로젝트 소개</a>
+      <a href="#">서비스</a>
+      <a href="#">접근성 설명</a>
+      <a href="#">문의하기</a>
+      <a href="#">개인 정보 정책</a>
+    </nav>
+  </header>
+  
+  <main>
+    <h1>스마트 원단 분석</h1>
+    <button id="startBtn">시작하기</button>
     
-    <!-- 로딩 표시 -->
-    <p class="loader"><span>Scan</span></p>
-
-    <!-- 하단 버튼 -->
-    <div class="footer">
-      <p>예측하기</p>
-      <button id="btn" class="predict-btn">▶</button>
+    <!-- 기존 기능: 이미지 업로드/분류 박스 -->
+    <div class="container">
+      <div class="header" id="drop-area">
+        <input type="file" id="file" accept="image/*" />
+        <label for="file" class="upload-btn">이미지 업로드</label>
+        <p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>
+      </div>
+      <img id="preview" />
+      <pre id="result"></pre>
+      <p class="loader"><span>Scan</span></p>
+      <div class="footer">
+        <p>예측하기</p>
+        <button id="btn" class="predict-btn">▶</button>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script src="app.js"></script>
   <script>
-    // 드래그 앤 드롭 이벤트 처리
+    // 시작하기 버튼 클릭 시 스크롤해서 컨텐츠로 이동
+    document.getElementById('startBtn').addEventListener('click', function(){
+      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 드래그 앤 드롭 이미지 업로드
     const dropArea = document.getElementById("drop-area");
     const fileInput = document.getElementById("file");
     const preview = document.getElementById("preview");
 
-    // 드래그 시 스타일 강조
     ["dragenter", "dragover"].forEach(eventName => {
       dropArea.addEventListener(eventName, e => {
         e.preventDefault();
@@ -102,7 +116,6 @@
         dropArea.classList.add("highlight");
       }, false);
     });
-
     ["dragleave", "drop"].forEach(eventName => {
       dropArea.addEventListener(eventName, e => {
         e.preventDefault();
@@ -110,8 +123,6 @@
         dropArea.classList.remove("highlight");
       }, false);
     });
-
-    // 드롭된 파일 처리
     dropArea.addEventListener("drop", e => {
       const files = e.dataTransfer.files;
       if (files.length > 0) {
@@ -119,14 +130,11 @@
         showPreview(files[0]);
       }
     });
-
-    // 파일 선택 시 미리보기
     fileInput.addEventListener("change", e => {
       if (fileInput.files.length > 0) {
         showPreview(fileInput.files[0]);
       }
     });
-
     function showPreview(file) {
       const reader = new FileReader();
       reader.onload = e => {
@@ -137,5 +145,3 @@
   </script>
 </body>
 </html>
-
-
