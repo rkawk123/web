@@ -1,3 +1,76 @@
+/* 전체 페이지 기본 */
+body {
+  font-family: 'Noto Sans KR', Arial, sans-serif;
+  margin: 0; padding: 0;
+  background: #fff;
+}
+
+/* 헤더: 로고+네비바 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px 10px 40px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+}
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo .dot {
+  width: 18px; height: 18px;
+  background: #232323;
+  border-radius: 50%;
+  margin-right: 4px;
+  display: inline-block;
+}
+.logo .brand {
+  margin-left: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #232323;
+}
+nav a {
+  color: #232323;
+  text-decoration: none;
+  margin-left: 32px;
+  font-size: 1.05rem;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* 메인 타이틀 */
+main h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 56px 0 20px 40px;
+}
+
+#startBtn {
+  margin-left: 40px;
+  margin-bottom: 40px;
+  font-size: 1.30rem;
+  padding: 12px 32px;
+  border-radius: 32px;
+  border: 1.5px solid #232323;
+  background: #fff;
+  color: #232323;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#startBtn:hover {
+  background: #232323;
+  color: #fff;
+}
+
+/* 업로드/분류 박스 (기존 스타일) */
+main .container {
+  margin-left: 40px;
+}
+
 /* 컨테이너 박스 */
 .container {
   height: 400px;
@@ -113,7 +186,7 @@
   background-color: navy;
 }
 
-/* From Uiverse.io by kat_2522 */ 
+/* 로딩 애니메이션 */
 .loader {
   max-width: fit-content;
   color: rgb(242, 255, 240);
@@ -144,7 +217,6 @@
   z-index: 0;
   transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 .loader::before {
   position: absolute;
   content: "";
@@ -160,31 +232,15 @@
   transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes scan {
-  0% {
-    top: 0px;
-  }
-  25% {
-    top: 54px;
-  }
-  50% {
-    top: 0px;
-  }
-  75% {
-    top: 54px;
-  }
+  0% { top: 0px; }
+  25% { top: 54px; }
+  50% { top: 0px; }
+  75% { top: 54px; }
 }
 @keyframes cut {
-  0% {
-    clip-path: inset(0 0 0 0);
-  }
-  25% {
-    clip-path: inset(100% 0 0 0);
-  }
-  50% {
-    clip-path: inset(0 0 100% 0);
-  }
-  75% {
-    clip-path: inset(0 0 0 0);
-  }
+  0% { clip-path: inset(0 0 0 0); }
+  25% { clip-path: inset(100% 0 0 0); }
+  50% { clip-path: inset(0 0 100% 0); }
+  75% { clip-path: inset(0 0 0 0); }
 }
 
