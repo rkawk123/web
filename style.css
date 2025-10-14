@@ -335,3 +335,55 @@ main p {
     width: 120px;
   }
 }
+
+/* 중앙 정렬 강제 보정 (파일 맨 끝에 추가하세요) */
+
+/* 상단 헤더 내부 컨텐츠 제한 및 중앙 정렬 */
+header {
+  padding-left: 0;
+  padding-right: 0;
+  background: #fff;
+}
+
+/* 헤더 내부 내용을 최대 너비에 맞춰 중앙에 고정 (컨텐츠 정렬 기준 통일) */
+header .header-inner {
+  width: 100%;
+  max-width: 900px;   /* 페이지 전체 최대 너비와 일치시킴 */
+  margin: 0 auto;     /* 가운데 정렬 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* header 내부 여백(좌우 균등) */
+  box-sizing: border-box;
+}
+
+/* main과 container 중앙 고정 */
+main {
+  margin: 0 auto;           /* 화면 중앙으로 정렬 */
+  width: 100%;
+  max-width: 900px;         /* header와 동일한 최대 너비로 통일 */
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+/* 컨테이너 중앙화(추가 안전장치) */
+.container {
+  margin: 0 auto;
+}
+
+/* nav가 너무 오른쪽으로 붙는 경우를 방지 */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 작은 화면에서 좌우 여백 확보 */
+@media (min-width: 901px) {
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
