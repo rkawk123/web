@@ -13,6 +13,7 @@ const $previewWrapper = document.querySelector(".preview-wrapper");
 const $captureBtn = document.createElement("div");
 const $video = document.createElement("video");
 const $canvas = document.createElement("canvas");
+const $shopLinks = document.getElementById("shopLinks"); // 🛍 링크 요소 가져오기
 
 // 드래그 & 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -50,10 +51,12 @@ function showPreview(fileOrBlob) {
   reader.onload = e => {
     $preview.onload = () => {
       $scanLine.style.width = $preview.clientWidth + "px";
+      $scanLine.style.left = $preview.offsetLeft + "px"; // 이미지 왼쪽 기준 맞춤
     };
     $preview.src = e.target.result;
     $result.textContent = "";
     $resultText.innerHTML = "";
+    $shopLinks.style.display = "none"; // 새로운 이미지 올릴 때 링크 숨기기
   };
   reader.readAsDataURL(fileOrBlob);
 }
@@ -73,6 +76,7 @@ $btn.addEventListener("click", async () => {
   $scanLine.style.display = "block";
   $result.textContent = "";
   $resultText.innerHTML = "";
+  $shopLinks.style.display = "none"; // 로딩 중엔 링크 숨김
 
   try {
     const res = await fetch(API, { method: "POST", body: fd });
@@ -98,6 +102,39 @@ $btn.addEventListener("click", async () => {
         <p>🌬️ 건조법: ${data.dry_method}</p>
         <p>⚠️ 주의사항: ${data.special_note}</p>
       `;
+
+      // 🔗 예측된 재질명으로 쇼핑몰 링크 생성
+      const fabricName = data.ko_name || data.predicted_fabric;
+      const query = encodeURIComponent(fabricName);
+
+      const shopLinks = [
+        {
+          name: "네이버 쇼핑",
+          url: `https://search.shopping.naver.com/search/all?query=${query}`,
+          img: "./images/1.jpg"
+        },
+        {
+          name: "무신사",
+          url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`,
+          img: "./images/2.jpg"
+        },
+        {
+          name: "스파오",
+          url: `https://www.spao.com/product/search.html?keyword=${query}`,
+          img: "./images/3.jpg"
+        }
+      ];
+
+      $shopLinks.innerHTML = shopLinks
+        .map(link => `
+          <a href="${link.url}" target="_blank" class="shop-link">
+            <img src="${link.img}" alt="${link.name} 로고">
+          </a>
+        `)
+        .join("");
+
+      $shopLinks.style.display = "flex";
+      document.getElementById("shopTitle").style.display = "block"; // AI 추천 표시
     }
   } catch (e) {
     $result.textContent = "에러: " + e.message;
@@ -109,7 +146,6 @@ $btn.addEventListener("click", async () => {
 });
 
 // 카메라 촬영
-
 $cameraBtn.addEventListener("click", async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -138,7 +174,6 @@ $cameraBtn.addEventListener("click", async () => {
     $previewWrapper.appendChild($captureBtn);
 
     $captureBtn.addEventListener("click", async () => {
-
       // video 크기 로드 후 캡처
       $canvas.width = $video.videoWidth;
       $canvas.height = $video.videoHeight;
@@ -170,7 +205,6 @@ $cameraBtn.addEventListener("click", async () => {
   }
 });
 
-
 // 5분마다 서버에 ping 보내기
 setInterval(async () => {
   try {
@@ -182,4 +216,3 @@ setInterval(async () => {
     console.warn("서버 ping 실패:", err);
   }
 }, 5 * 60 * 1000); // 5분 = 300,000 ms
-
