@@ -13,7 +13,7 @@ const $previewWrapper = document.querySelector(".preview-wrapper");
 const $captureBtn = document.createElement("div");
 const $video = document.createElement("video");
 const $canvas = document.createElement("canvas");
-const $shopLinks = document.getElementById("shopLinks"); // 🛍 링크 요소 가져오기
+const $shopLinks = document.getElementById("shopLinks"); // 링크 요소 가져오기
 
 // 드래그 & 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -103,7 +103,7 @@ $btn.addEventListener("click", async () => {
         <p>⚠️ 주의사항: ${data.special_note}</p>
       `;
 
-      // 🔗 예측된 재질명으로 쇼핑몰 링크 생성
+      // 예측된 재질명으로 쇼핑몰 링크 생성
       const fabricName = data.ko_name || data.predicted_fabric;
       const query = encodeURIComponent(fabricName);
 
