@@ -297,6 +297,28 @@ h1 {
   transform: scale(1.1);
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
+.capture-circle {
+  width: 60px;           /* 원 크기 */
+  height: 60px;
+  background-color: white;
+  border-radius: 50%;    /* 원 모양 */
+  border: 3px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  position: absolute;
+  bottom: 20px;          /* 미리보기 아래쪽 */
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
+  z-index: 100;
+}
+
+.capture-circle:hover {
+  transform: translateX(-50%) scale(1.1);
+}
 
 /* -------------------- */
 /* 모바일 반응형 */
