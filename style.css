@@ -407,26 +407,38 @@ h1 {
 }
 
 /* progress bar 관련 스타일 추가 시작 */
-.progress-wrapper {
-  background: #f0f0f0;
-  border-radius: 12px;
-  overflow: hidden;
-  height: 24px;
-  margin-bottom: 10px;
-  width: 100%;
+.progress-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 50px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
+
+.progress-label {
+  font-weight: 600;
+  text-align: right;
+}
+
+.progress-wrapper {
+  width: 100%;
+  height: 14px;
+  background: #e9eef5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 .progress-bar {
   height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, #26c6da 70%, #018d97 100%);
-  border-radius: 12px;
-  /* transition 은 JS에서 처리하므로 여기서 설정하지 않아도 무방 */
+  background: linear-gradient(90deg, #00d4ff, #0096ff);
+  border-radius: 10px;
 }
-.progress-label {
-  margin-bottom: 2px;
-  font-weight: bold;
-  font-size: 14px;
+
+.progress-percent {
+  font-weight: 600;
+  color: #333;
 }
+
 
 /* fade-in 및 slide-up 효과 */
 /* JS에서 style 직접 조작하므로 css 클래스로 따로 안 만들어도 되나, 만약 넣을 경우 */
@@ -442,4 +454,23 @@ h1 {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s, transform 0.8s;
+}
+
+.overlay {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4); /* 살짝 어두운 투명 */
+  z-index: 9999; /* 최상단 */
+}
+
+.overlay-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  text-align: center;
 }
