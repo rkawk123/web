@@ -64,6 +64,14 @@ function showPreview(fileOrBlob) {
   reader.readAsDataURL(fileOrBlob);
 }
 
+function showOverlay() {
+  document.getElementById('accessibilityOverlay').style.display = 'flex';
+}
+function closeOverlay() {
+  document.getElementById('accessibilityOverlay').style.display = 'none';
+}
+
+
 // 서버 업로드 및 예측
 $btn.addEventListener("click", async () => {
   let uploadFile = $file.files[0] || $file._cameraBlob;
@@ -88,43 +96,44 @@ $btn.addEventListener("click", async () => {
     if (!res.ok) throw new Error(data.error || "요청 실패");
 
     if (data.predictions?.length) {
-      let text = "Top Predictions:\n";
       let progressBarsHtml = "";
-
-      data.predictions.forEach((p, i) => {
-        const percent = (p.score * 100).toFixed(2);
-        text += `${i + 1}. Label: ${p.label} (Score: ${percent}%)\n`;
-
+    
+      data.predictions.forEach((p) => {
+        const percent = (p.score * 100).toFixed(1);
+    
         progressBarsHtml += `
-          <div class="progress-label">${p.label}</div>
-          <div class="progress-wrapper">
-            <div class="progress-bar" data-percent="${percent}" style="width:0"></div>
+          <div class="progress-row">
+            <span class="progress-label">${p.label}</span>
+            
+            <div class="progress-wrapper">
+              <div class="progress-bar" data-percent="${percent}" style="width:0"></div>
+            </div>
+    
+            <span class="progress-percent">${percent}%</span>
           </div>
         `;
       });
-
-      $result.textContent = text;  // 기존 텍스트 출력 유지
-
-      // 막대바 영역에 생성
-      document.getElementById('progressBars').innerHTML = progressBarsHtml;
-
-      // 막대바 fade in & slide up 효과 적용
-      const progressBarsElement = document.getElementById('progressBars');
-      progressBarsElement.style.opacity = 0;
-      progressBarsElement.style.transform = 'translateY(30px)';
-      progressBarsElement.style.transition = 'opacity 0.8s, transform 0.8s';
-
+    
+      // 막대바 영역에 출력
+      document.getElementById("progressBars").innerHTML = progressBarsHtml;
+    
+      // fade-in + 애니메이션
+      const container = document.getElementById("progressBars");
+      container.style.opacity = 0;
+      container.style.transform = "translateY(20px)";
+      container.style.transition = "opacity 0.5s, transform 0.5s";
+    
       setTimeout(() => {
-        progressBarsElement.style.opacity = 1;
-        progressBarsElement.style.transform = 'translateY(0)';
-
-        // 막대바 애니메이션 - width 점진적으로 채우기
-        document.querySelectorAll('.progress-bar').forEach(bar => {
+        container.style.opacity = 1;
+        container.style.transform = "translateY(0)";
+    
+        document.querySelectorAll(".progress-bar").forEach((bar) => {
           const percent = bar.dataset.percent;
           bar.style.transition = "width 1.2s cubic-bezier(.42,0,.58,1)";
           bar.style.width = percent + "%";
         });
       }, 100);
+  
 
     } else if (data.error) {
       $result.textContent = "백엔드 에러: " + data.error;
@@ -254,4 +263,3 @@ setInterval(async () => {
     console.warn("서버 ping 실패:", err);
   }
 }, 5 * 60 * 1000); // 5분 = 300,000 ms
-
