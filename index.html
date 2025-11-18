@@ -1,147 +1,75 @@
-<!--
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>이미지 분류기 (DenseNet)</title>
-  <style>
-    body{font-family:system-ui, sans-serif; max-width:720px; margin:40px auto;}
-    .card{padding:24px; border:1px solid #ddd; border-radius:16px;}
-    #preview{max-width:100%; margin-top:12px; border-radius:12px;}
-    button{padding:10px 16px; border-radius:10px; border:0; box-shadow:0 2px 6px rgba(0,0,0,.1)}
-  </style>
-</head>
-<body>
-  <h1>이미지 분류기</h1>
-  <div class="card">
-    <input type="file" id="file" accept="image/*" />
-    <button id="btn">예측하기</button>
-    <img id="preview" />
-    <pre id="result"></pre>
-  </div>
-
-  <script>
-    #const API = "https://backend-fgai.onrender.com/predict"; #기존
-    const API = "https://backend-6i2t.onrender.com/predict";
-    const $file = document.getElementById("file");
-    const $btn = document.getElementById("btn");
-    const $result = document.getElementById("result");
-    const $preview = document.getElementById("preview");
-
-    $file.addEventListener("change", () => {
-      const f = $file.files[0];
-      if (f) $preview.src = URL.createObjectURL(f);
-    });
-
-    $btn.addEventListener("click", async () => {
-      const f = $file.files[0];
-      if (!f) { alert("이미지를 선택하세요!"); return; }
-      const fd = new FormData();
-      fd.append("file", f);
-      $result.textContent = "예측 중...";
-      try {
-        const res = await fetch(API, { method: "POST", body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "요청 실패");
-        $result.textContent = `Label: ${json.label}\nIndex: ${json.class_index}\nConfidence: ${(json.confidence*100).toFixed(2)}%`;
-      } catch (e) {
-        $result.textContent = "에러: " + e.message;
-      }
-    });
-  </script>
-</body>
-</html>
--->
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>스마트 원단 분석 · 이미지 분류기 (DenseNet)</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- 헤더: 로고+메뉴바 -->
+  <!-- 헤더: 로고 + 메뉴 -->
   <header>
     <div class="logo">
       <span class="dot"></span><span class="dot"></span>
       <span class="brand">SMART TEXTURE</span>
     </div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">프로젝트 소개</a>
-      <a href="#">서비스</a>
-      <a href="#">접근성 설명</a>
-      <a href="#">문의하기</a>
-      <a href="#">개인 정보 정책</a>
+      <a href="#home">Home</a>
+      <a href="#project">프로젝트 소개</a>
+      <a href="#accessibility">접근성 설명</a>
+      <a href="#contact">문의하기</a>
     </nav>
   </header>
-  
+
+  <!-- 메인 콘텐츠 -->
   <main>
-    <h1>스마트 원단 분석</h1>
-    <button id="startBtn">시작하기</button>
-    
-    <!-- 기존 기능: 이미지 업로드/분류 박스 -->
-    <div class="container">
-      <div class="header" id="drop-area">
-        <input type="file" id="file" accept="image/*" />
-        <label for="file" class="upload-btn">이미지 업로드</label>
-        <p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>
+    <section id="home"> 
+      <h1>스마트 원단 분석</h1>
+      <!--<p>여기에 이미지를 드래그하거나 버튼을 클릭하세요</p>-->
+  
+      <!-- 메인 박스 -->
+      <div class="container">
+        <!-- 업로드 영역 -->
+        <div class="header" id="drop-area">
+          <input type="file" id="file" accept="image/*" />
+          <label for="file" class="upload-btn">이미지 업로드</label>
+          <button id="camera-btn" class="camera-btn">📷 카메라로 촬영</button>
+          <p>이미지를 업로드하거나 카메라로 촬영해 원단 종류를 분석해보세요.</p>
+        </div>
+  
+        <!-- 미리보기 -->
+        <div class="preview-wrapper">
+          <img id="preview" />
+          <div class="scan-line" id="scan-line"></div>
+        </div>
+  
+        <!-- 결과 -->
+        <div id="resultText"></div>
+        <div id="progressBars"></div>
+
+        <!-- 쇼핑몰 연동 -->
+        <h3 id="shopTitle" style="display:none; text-align:left; margin-bottom:10px;">🛍 AI 추천</h3>
+        <div id="shopLinks" class="shop-links" style="display:none;"></div>
+  
+        <!-- 로딩 및 버튼 -->
+        <div class="footer">
+          <button id="btn" class="predict-btn">▶ 예측하기</button>
+          <span id="loading">
+            예측 중
+            <span class="loader"></span>
+          </span>
+        </div>
       </div>
-      <img id="preview" />
-      <pre id="result"></pre>
-      <p class="loader"><span>Scan</span></p>
-      <div class="footer">
-        <p>예측하기</p>
-        <button id="btn" class="predict-btn">▶</button>
-      </div>
-    </div>
+    </section>
+    <section id="project">
+       <h1>프로젝트 소개</h1>
+    </section>
+  <!-- 추가 컨텐츠도 같은 방식으로 계속 추가 -->
   </main>
 
+  <!-- 스크립트 -->
   <script src="app.js"></script>
-  <script>
-    // 시작하기 버튼 클릭 시 스크롤해서 컨텐츠로 이동
-    document.getElementById('startBtn').addEventListener('click', function(){
-      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // 드래그 앤 드롭 이미지 업로드
-    const dropArea = document.getElementById("drop-area");
-    const fileInput = document.getElementById("file");
-    const preview = document.getElementById("preview");
-
-    ["dragenter", "dragover"].forEach(eventName => {
-      dropArea.addEventListener(eventName, e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropArea.classList.add("highlight");
-      }, false);
-    });
-    ["dragleave", "drop"].forEach(eventName => {
-      dropArea.addEventListener(eventName, e => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropArea.classList.remove("highlight");
-      }, false);
-    });
-    dropArea.addEventListener("drop", e => {
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        fileInput.files = files;
-        showPreview(files[0]);
-      }
-    });
-    fileInput.addEventListener("change", e => {
-      if (fileInput.files.length > 0) {
-        showPreview(fileInput.files[0]);
-      }
-    });
-    function showPreview(file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        preview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  </script>
 </body>
 </html>
+
+
