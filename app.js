@@ -1,5 +1,3 @@
-//PC index.html
-
 const API = "https://backend-6i2t.onrender.com/predict";
 const API_STREAM = "https://backend-6i2t.onrender.com/predict_stream";
 
