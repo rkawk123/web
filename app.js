@@ -1,3 +1,4 @@
+
 const API = "https://backend-6i2t.onrender.com/predict";
 
 const $dropArea = document.getElementById("drop-area");
@@ -115,10 +116,10 @@ $btn.addEventListener("click", async () => {
       });
     
       // 막대바 영역에 출력
-      document.getElementById("progressBars").innerHTML = progressBarsHtml;
+      document.getElementById("progressBarsContainer").innerHTML = progressBarsHtml;
     
       // fade-in + 애니메이션
-      const container = document.getElementById("progressBars");
+      const container = document.getElementById("progressBarsContainer");
       container.style.opacity = 0;
       container.style.transform = "translateY(20px)";
       container.style.transition = "opacity 0.5s, transform 0.5s";
@@ -140,7 +141,6 @@ $btn.addEventListener("click", async () => {
     } else {
       $result.textContent = "예측 결과를 받지 못했습니다.";
     }
-
 
     if (data.ko_name) {
       $resultText.innerHTML = `
@@ -263,3 +263,39 @@ setInterval(async () => {
     console.warn("서버 ping 실패:", err);
   }
 }, 5 * 60 * 1000); // 5분 = 300,000 ms
+
+
+// 문의 폼 제출 기능만 별도
+document.addEventListener('DOMContentLoaded', function () {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!email || !message) {
+        alert("필수 항목을 작성하세요.");
+        return;
+      }
+
+      // 실제 배포 환경이라면 여기에 서버로 POST 등 구현!
+      // 데모는 Console에 출력만
+      console.log({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message
+      });
+
+      alert("문의가 성공적으로 제출되었습니다!");
+
+      e.target.reset();
+    });
+  }
+});
