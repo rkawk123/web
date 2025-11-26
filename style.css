@@ -713,6 +713,11 @@ h1 {
     text-align: center;
   }
 
+  h2 {
+    white-space: normal; /* 줄바꿈 허용 */
+    word-break: keep-all; /* 단어 단위로 줄바꿈 */
+  }
+
   .container {
     width: 100%; /*90*/
     height: auto;
