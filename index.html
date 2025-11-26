@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>스마트 원단 분석 · 이미지 분류기 (DenseNet)</title>
   <link rel="stylesheet" href="style.css" />
+  <script async src="https://docs.opencv.org/4.x/opencv.js" type="text/javascript"></script>
+
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body>
   <!-- 헤더: 로고 + 메뉴 -->
@@ -14,12 +19,10 @@
       <span class="brand">SMART TEXTURE</span>
     </div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">프로젝트 소개</a>
-      <a href="#">서비스</a>
-      <a href="#">접근성 설명</a>
-      <a href="#">문의하기</a>
-      <a href="#">개인정보 정책</a>
+      <a href="#home">Home</a>
+      <a href="#project">프로젝트 소개</a>
+      <a href="#contact">문의하기</a>
+      <a href="#accessibility">접근성 설명</a>
     </nav>
   </header>
 
@@ -41,11 +44,14 @@
       <div class="preview-wrapper">
         <img id="preview" />
         <div class="scan-line" id="scan-line"></div>
+        <!-- 이미지 자르기 버튼 자리 -->
+        <button id="crop-btn" class="predict-btn" style="display:none;">이미지 자르기</button>
       </div>
 
       <!-- 결과 -->
       <div id="status"></div>
-      <pre id="result"></pre>
+      <pre id="result"></pre> <!--삭제 하던지 해야할 듯...-->
+      <div id="progressBarsContainer"></div>
       <div id="resultText"></div>
 
       <!-- 쇼핑몰 연동 -->
@@ -61,6 +67,154 @@
         </span>
       </div>
     </div>
+  </section>
+
+  <!-- Font Awesome 아이콘 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <section id="project" class="project">
+      <div class="intro-container">
+
+        <h2 class="intro-title">AI 기반 의류 소재 인식 시스템</h2>
+        <p class="intro-subtitle">실환경 원단 이미지를 AI로 분석하여 섬유 재질을 자동으로 식별하는 기술</p>
+
+        <!-- 문제 정의 -->
+        <div class="intro-card">
+          <div class="icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <h3>왜 필요한가?</h3>
+          <p>
+            사용자는 의류 소재 정보를 정확히 파악하기 어렵고,
+            섬유 산업에서는 자동화된 원단 분류·검사가 요구되고 있습니다.
+            섬유 산업에서도 품질 관리 자동화가 중요한 과제로 떠오르고 있습니다.
+          </p>
+        </div>
+
+        <!-- 솔루션 -->
+        <div class="intro-card">
+          <div class="icon-box"><i class="fa-solid fa-lightbulb"></i></div>
+          <h3>Fabric AI의 솔루션</h3>
+          <p>
+            DenseNet121 기반 AI 모델을 활용해 실환경 원단 이미지를 분석하고 섬유 재질을 안정적으로 분류합니다.
+            전이학습 및 파인튜닝으로 높은 정확도를 확보했으며 다양한 서비스로 확장 가능한 구조로 설계했습니다.
+          </p>
+        </div>
+
+        <!-- 핵심 기능 -->
+        <div class="features-grid">
+          <div class="feature-item">
+            <i class="fa-solid fa-brain"></i>
+            <h4>AI 소재 분석</h4>
+            <p>원단 질감을 자동 인식하고 재질을 분류합니다.</p>
+          </div>
+
+          <div class="feature-item">
+            <i class="fa-solid fa-shirt"></i>
+            <h4>의류 관리 정보</h4>
+            <p>세탁 및 관리 정보 제공 서비스로 확장됩니다.</p>
+          </div>
+        </div>
+
+        <!-- 기대효과 -->
+        <div class="intro-card">
+          <div class="icon-box"><i class="fa-solid fa-star"></i></div>
+          <h4>기대 효과</h4>
+          <p>
+            사용자 편의성 향상, 패션·섬유 산업의 자동화 가속, 효율적 품질 관리 등
+            실제 서비스로서 높은 확장성을 지니며 산업 전반에 긍정적인 영향을 줄 수 있습니다.
+          </p>
+        </div>
+
+        <!-- 팀 소개 → intro-card 디자인으로 통일 -->
+        <div class="intro-card">
+          <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+          <h3>프로젝트 팀</h3>
+          <ul class="team-list">
+            <li><strong>황정원</strong> – 데이터 구축 & UI/UX 디자인</li>
+            <li><strong>김은채</strong> – 웹/백엔드 개발</li>
+            <li><strong>윤혜주</strong> – 기획 & 시연 시스템 구현</li>
+          </ul>
+        </div>
+
+        <!-- 기술스택 -->
+        <div class="intro-card">
+          <div class="icon-box"><i class="fa-solid fa-code"></i></div>
+          <h3>기술 스택</h3>
+
+          <div class="tech-grid">
+            <span><i class="fa-brands fa-python"></i> Python</span>
+            <span><i class="fa-solid fa-brain"></i> TensorFlow</span>
+            <span><i class="fa-solid fa-brain"></i> PyTorch</span>
+            <span><i class="fa-solid fa-network-wired"></i> DenseNet121</span>
+            <span><i class="fa-solid fa-server"></i> FastAPI</span>
+            <span><i class="fa-brands fa-html5"></i> HTML/CSS/JS</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <section id="accessibility">
+      <!-- 접근성 설명 이미지/컨텐츠를 위한 overlay -->
+      <div id="accessibilityOverlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+          <img src="accessibility-guide.png" alt="접근성 안내 이미지" />
+          <button onclick="closeOverlay()">닫기</button>
+        </div>
+      </div>
+    </section>
+    <section id="contact">
+      <div class="container contact-container">
+        <div class="left contact-left">
+          <h1>문의하기</h1>
+          <p>
+            FabricFinder는 첨단 원단 분류 프로그램 및 의류 추천 사이트로,<br>
+            고급 기술을 활용하여 사용자가 개인적인 스타일과 필요에 맞춘 완벽한 소재와 의상을 찾을 수 있도록 돕는 서비스를 제공합니다.
+          </p>
+          <div class="form-labels">
+            <span>문의 양식</span><br>
+            <span>제출</span><br>
+            <span>보내기</span>
+          </div>
+        </div>
+        <div class="right contact-right">
+          <form id="contactForm">
+            <h2>Contact us</h2>
+            <div class="row">
+              <div class="field">
+                <label for="firstName">First name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="First name">
+              </div>
+              <div class="field">
+                <label for="lastName">Last name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Last name">
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" placeholder="Phone">
+              </div>
+            </div>
+            <div class="row">
+              <div class="field full">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" placeholder="Message" required></textarea>
+              </div>
+            </div>
+            <div class="row submit-row">
+              <button type="submit" id="submitBtn">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  <!-- 추가 컨텐츠도 같은 방식으로 계속 추가 -->
   </main>
 
   <!-- 스크립트 -->
