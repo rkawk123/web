@@ -14,8 +14,11 @@ const $previewWrapper = document.querySelector(".preview-wrapper");
 const $captureBtn = document.createElement("div");
 const $video = document.createElement("video");
 const $canvas = document.createElement("canvas");
-const $shopLinks = document.getElementById("shopLinks"); // 🛍 링크 요소 가져오기
+const $shopLinks = document.getElementById("shopLinks");
 const $status = document.getElementById("status");
+
+let cropper;
+let $cropBtn = document.createElement("button");
 
 // 드래그 & 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -50,21 +53,69 @@ $file.addEventListener("change", () => {
   }
 });
 
-//이미지 미리보기
+//이미지 미리보기 + 사용자 드래그 크롭
 function showPreview(fileOrBlob) {
   const reader = new FileReader();
   reader.onload = e => {
-    $preview.onload = () => {
-      $scanLine.style.width = $preview.clientWidth + "px";
-      $scanLine.style.left = $preview.offsetLeft + "px";
-    };
     $preview.src = e.target.result;
     $result.textContent = "";
     $resultText.innerHTML = "";
     $shopLinks.style.display = "none";
     document.getElementById("shopTitle").style.display = "none";
+
+    // Cropper 버튼 초기화
+    if (!$cropBtn.parentNode) {
+      $cropBtn.textContent = "이미지 자르기";
+      $cropBtn.className = "predict-btn";
+      $previewWrapper.appendChild($cropBtn);
+
+      $cropBtn.addEventListener("click", () => {
+        // 기존 Cropper 제거
+        if (cropper) cropper.destroy();
+
+        // Cropper 초기화: 사용자가 드래그하여 선택
+        cropper = new Cropper($preview, {
+          viewMode: 1,
+          autoCrop: false,  // 자동 사각형 제거
+          background: false,
+          modal: true,
+          movable: true,
+          zoomable: true,
+          rotatable: false,
+          scalable: false
+        });
+
+        // 확인 버튼
+        let $confirmBtn = document.createElement("button");
+        $confirmBtn.textContent = "확인";
+        $confirmBtn.className = "predict-btn";
+        $previewWrapper.appendChild($confirmBtn);
+        $confirmBtn.addEventListener("click", () => {
+          if (!cropper) return;
+          cropper.getCroppedCanvas().toBlob(blob => {
+            const reader2 = new FileReader();
+            reader2.onload = e2 => {
+              $preview.src = e2.target.result;
+              $file._cameraBlob = blob;
+              cropper.destroy();
+              cropper = null;
+              $confirmBtn.remove();
+            };
+            reader2.readAsDataURL(blob);
+          }, "image/png");
+        });
+      });
+    }
+    $cropBtn.style.display = "inline-block";
   };
   reader.readAsDataURL(fileOrBlob);
+}
+
+function showOverlay() {
+  document.getElementById('accessibilityOverlay').style.display = 'flex';
+}
+function closeOverlay() {
+  document.getElementById('accessibilityOverlay').style.display = 'none';
 }
 
 // 버튼 클릭 + 슬라이드
@@ -130,18 +181,52 @@ $btn.addEventListener("click", async () => {
         if (parsed.result) {
           const r = parsed.result;
 
-          // 예측 결과 표시
-          if (r.predictions?.length) {
-            let text = "Top Predictions:\n";
-            r.predictions.forEach((p, i) => {
-              text += `${i + 1}. Label: ${p.label} (Score: ${(p.score * 100).toFixed(2)}%)\n`;
-            });
-            $result.textContent = text;
-          } else if (parsed.error) {
-            $result.textContent = "백엔드 에러: " + parsed.error;
-          } else {
-            $result.textContent = "예측 결과를 받지 못했습니다.";
-          }
+          //예측 결과 표시
+            if (r?.predictions?.length) {
+              // --- 프로그래스바 생성 ---
+              let progressBarsHtml = "";
+
+              r.predictions.forEach((p, i) => {
+                const percent = (p.score * 100).toFixed(1);
+
+                progressBarsHtml += `
+                  <div class="progress-row">
+                    <span class="progress-label">${i + 1}. ${p.label}</span>
+
+                    <div class="progress-wrapper">
+                      <div class="progressBars" data-percent="${percent}" style="width:0"></div>
+                    </div>
+
+                    <span class="progress-percent">${percent}%</span>
+                  </div>
+                `;
+              });
+
+              const container = document.getElementById("progressBarsContainer");
+              container.innerHTML = progressBarsHtml;
+
+              // 애니메이션 적용
+              container.style.opacity = 0;
+              container.style.transform = "translateY(20px)";
+              container.style.transition = "opacity 0.5s, transform 0.5s";
+
+              setTimeout(() => {
+                container.style.opacity = 1;
+                container.style.transform = "translateY(0)";
+                container.querySelectorAll(".progressBars").forEach((bar) => {
+                  const percent = bar.dataset.percent;
+                  bar.style.transition = "width 1.2s cubic-bezier(.42,0,.58,1)";
+                  bar.style.width = percent + "%";
+                });
+              }, 100);
+
+              // 기존 텍스트 영역 초기화
+              $result.textContent = "";
+            } else if (parsed.error) {
+              $result.textContent = "백엔드 에러: " + parsed.error;
+            } else {
+              $result.textContent = "예측 결과를 받지 못했습니다.";
+            }
 
           // 상세 정보 + 슬라이드
           if (r.ko_name) {
@@ -273,6 +358,41 @@ $cameraBtn.addEventListener("click", async () => {
   }
 });
 
+// 문의 폼 제출 기능
+document.addEventListener('DOMContentLoaded', function () {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!email || !message) {
+        alert("필수 항목을 작성하세요.");
+        return;
+      }
+
+      // 실제 배포 환경이라면 여기에 서버로 POST 등 구현!
+      // 데모는 Console에 출력만
+      console.log({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message
+      });
+
+      alert("문의가 성공적으로 제출되었습니다!");
+
+      e.target.reset();
+    });
+  }
+});
+
 // 서버 ping
 setInterval(async () => {
   try {
@@ -282,5 +402,6 @@ setInterval(async () => {
     console.warn("서버 ping 실패:", err);
   }
 }, 5 * 60 * 1000);
+
 
 
