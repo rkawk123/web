@@ -6,16 +6,16 @@ const $file = document.getElementById("file");
 const $preview = document.getElementById("preview");
 const $btn = document.getElementById("btn");
 const $result = document.getElementById("result");
+const $resultText = document.getElementById("resultText");
 const $loader = document.getElementById("loading");
 const $scanLine = document.querySelector(".scan-line");
-const $resultText = document.getElementById("resultText");
 const $cameraBtn = document.getElementById("camera-btn");
 const $previewWrapper = document.querySelector(".preview-wrapper");
 const $captureBtn = document.createElement("div");
 const $video = document.createElement("video");
 const $canvas = document.createElement("canvas");
-const $shopLinks = document.getElementById("shopLinks");
-const $status = document.getElementById("status");
+const $shopLinks = document.getElementById("shopLinks"); //링크 요소 가져오기
+const $status = document.getElementById("status"); //
 
 let cropper;
 let $cropBtn = document.createElement("button");
@@ -58,10 +58,13 @@ function showPreview(fileOrBlob) {
   const reader = new FileReader();
   reader.onload = e => {
     $preview.src = e.target.result;
-    $result.textContent = "";
+    $result.textContent = ""; //리셋 부분
     $resultText.innerHTML = "";
     $shopLinks.style.display = "none";
     document.getElementById("shopTitle").style.display = "none";
+    document.getElementById("progressBarsContainer").innerHTML = "";
+    $status.innerText = "";
+    $resultText.innerHTML = "";
 
     // Cropper 버튼 초기화
     if (!$cropBtn.parentNode) {
@@ -118,7 +121,7 @@ function closeOverlay() {
   document.getElementById('accessibilityOverlay').style.display = 'none';
 }
 
-// 버튼 클릭 + 슬라이드
+// 버튼 클릭 + 슬라이드 (수정본)
 $btn.addEventListener("click", async () => {
   let uploadFile = $file.files?.[0] || $file._cameraBlob;
   if (!uploadFile) {
@@ -128,13 +131,15 @@ $btn.addEventListener("click", async () => {
 
   const fd = new FormData();
   fd.append("file", uploadFile);
-
-  $loader.style.display = "inline-block";
+  $loader.style.display = "inline-block"; //리셋 부분2
   $scanLine.style.display = "block";
   $result.textContent = "";
   $resultText.innerHTML = "";
   $shopLinks.style.display = "none";
   document.getElementById("shopTitle").style.display = "none";
+  document.getElementById("progressBarsContainer").innerHTML = "";
+  $status.innerText = "";
+  $resultText.innerHTML = "";
 
   // 슬라이드 interval id 저장
   if (!window.__fabric_slide_interval_id) window.__fabric_slide_interval_id = null;
@@ -306,6 +311,7 @@ $btn.addEventListener("click", async () => {
       }
     }
   } catch (e) {
+    console.error(e);  // 전체 에러 객체 보기
     $result.textContent = "에러: " + (e.message || e);
     $resultText.innerText = "에러: " + (e.message || e);
   } finally {
@@ -317,22 +323,24 @@ $btn.addEventListener("click", async () => {
 // 카메라 촬영
 $cameraBtn.addEventListener("click", async () => {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-     video: { facingMode: { ideal: "environment" } },
-     audio: false
-    });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+
+    $result.textContent = ""; //리셋 부분
+    $resultText.innerHTML = "";
+    $shopLinks.style.display = "none";
+    document.getElementById("shopTitle").style.display = "none";
+    document.getElementById("progressBarsContainer").innerHTML = "";
+    $status.innerText = "";
+    $resultText.innerHTML = "";
 
     $video.srcObject = stream;
     $video.autoplay = true;
     $video.playsInline = true;
     $video.width = 300; $video.height = 200;
 
-    $previewWrapper.innerHTML = "";
-    $previewWrapper.appendChild($video);
+    $previewWrapper.innerHTML = ""; $previewWrapper.appendChild($video);
 
-    await new Promise(resolve =>
-      $video.onloadedmetadata = () => { $video.play(); resolve();
-    });
+    await new Promise(resolve => $video.onloadedmetadata = () => { $video.play(); resolve(); });
 
     $captureBtn.className = "capture-circle";
     $previewWrapper.appendChild($captureBtn);
@@ -341,8 +349,8 @@ $cameraBtn.addEventListener("click", async () => {
       $canvas.width = $video.videoWidth;
       $canvas.height = $video.videoHeight;
       $canvas.getContext("2d").drawImage($video, 0, 0);
-
       const blob = await new Promise(resolve => $canvas.toBlob(resolve, "image/png"));
+
       stream.getTracks().forEach(track => track.stop());
 
       showPreview(blob); // 추가, 이미지 미리보기 + 스캔 라인 위치
