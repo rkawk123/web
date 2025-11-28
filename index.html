@@ -39,17 +39,20 @@
         </div>
   
         <!-- 미리보기 -->
-        <div class="preview-wrapper">
-          <img id="preview" />
-          <div class="scan-line" id="scan-line"></div>
+        <div class="analysis-row">
+          <div class="preview-wrapper">
+            <img id="preview">
+            <div class="scan-line" id="scan-line"></div>
+          </div>
+        
+          <div class="result-box">
+            <div id="result"></div>
+            <div id="progressBarsContainer"></div>
+            <div id="resultText"></div>
+          </div>
         </div>
-  
-       <!-- 결과 -->       
-        <div id="result"></div>
-        <div id="progressBarsContainer"></div>           
-        <div id="resultText"></div>
-
-    
+      
+          
         <!-- 쇼핑몰 연동 -->
         <h3 id="shopTitle" style="display:none; text-align:left; margin-bottom:10px;">🛍 AI 추천</h3>
         <div id="shopLinks" class="shop-links" style="display:none;"></div>
@@ -99,26 +102,25 @@
         <div class="features-grid">
           <div class="feature-item">
             <i class="fa-solid fa-brain"></i>
-            <h4>AI 소재 분석</h4>
+            <h3>AI 소재 분석</h3>
             <p>원단 질감을 자동 인식하고 재질을 분류합니다.</p>
           </div>
         
           <div class="feature-item">
             <i class="fa-solid fa-shirt"></i>
-            <h4>의류 관리 정보</h4>
+            <h3>의류 관리 정보</h3>
             <p>세탁 및 관리 정보 제공 서비스로 확장됩니다.</p>
+          </div>    
+          
+          <div class="feature-item">
+            <i class="fa-solid fa-star"></i>
+            <h3>기대 효과</h3>
+            <p>
+              사용자 편의성 향상, 패션·섬유 산업의 자동화 가속, 효율적 품질 관리 등 
+              실제 서비스로서 높은 확장성을 지니며 산업 전반에 긍정적인 영향을 줄 수 있습니다.
+            </p>
           </div>
-        </div>
-    
-        <!-- 기대효과 -->
-        <div class="intro-card">
-          <div class="icon-box"><i class="fa-solid fa-star"></i></div>
-          <h4>기대 효과</h4>
-          <p>
-            사용자 편의성 향상, 패션·섬유 산업의 자동화 가속, 효율적 품질 관리 등 
-            실제 서비스로서 높은 확장성을 지니며 산업 전반에 긍정적인 영향을 줄 수 있습니다.
-          </p>
-        </div>
+        </div>  
     
         <!-- 팀 소개 → intro-card 디자인으로 통일 -->
         <div class="intro-card">
@@ -159,56 +161,37 @@
         </div>
       </div>
     </section>
-    <section id="contact">
+
+    
+    <section id="contact" class="contact-section">
       <div class="container contact-container">
         <div class="left contact-left">
-          <h1>문의하기</h1>
-          <p>
-            FabricFinder는 첨단 원단 분류 프로그램 및 의류 추천 사이트로,<br>
-            고급 기술을 활용하여 사용자가 개인적인 스타일과 필요에 맞춘 완벽한 소재와 의상을 찾을 수 있도록 돕는 서비스를 제공합니다.
-          </p>
-          <div class="form-labels">
-            <span>문의 양식</span><br>
-            <span>제출</span><br>
-            <span>보내기</span>
-          </div>
+          <h1>방명록</h1>
+          <form id="contactForm">
+            <div class="field">
+              <label for="name">이름</label>
+              <input type="text" id="name" name="name" required placeholder="이름">
+            </div>
+            <div class="field">
+              <label for="contactInfo">연락처</label>
+              <input type="text" id="contactInfo" name="contactInfo" placeholder="이메일 또는 전화번호">
+            </div>
+            <div class="field">
+              <label for="message">메모</label>
+              <textarea id="message" name="message" required placeholder="한마디를 남겨주세요"></textarea>
+            </div>
+            <button type="submit">남기기</button>
+          </form>
         </div>
         <div class="right contact-right">
-          <form id="contactForm">
-            <h2>Contact us</h2>
-            <div class="row">
-              <div class="field">
-                <label for="firstName">First name</label>
-                <input type="text" id="firstName" name="firstName" placeholder="First name">
-              </div>
-              <div class="field">
-                <label for="lastName">Last name</label>
-                <input type="text" id="lastName" name="lastName" placeholder="Last name">
-              </div>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" placeholder="Email" required>
-              </div>
-              <div class="field">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" placeholder="Phone">
-              </div>
-            </div>
-            <div class="row">
-              <div class="field full">
-                <label for="message">Message *</label>
-                <textarea id="message" name="message" placeholder="Message" required></textarea>
-              </div>
-            </div>
-            <div class="row submit-row">
-              <button type="submit" id="submitBtn">Submit</button>
-            </div>
-          </form>
+          <h2>방명록 피드</h2>
+          <ul id="guestbookFeed">
+            <!-- 여기에 방명록 글 목록이 추가됩니다 -->
+          </ul>
         </div>
       </div>
     </section>
+
     
   <!-- 추가 컨텐츠도 같은 방식으로 계속 추가 -->
   </main>
