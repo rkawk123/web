@@ -312,6 +312,246 @@ h1 {
   flex-shrink: 0;         /* 컨테이너 줄어들어도 푸터 안쪽 유지 */
 }
 
+/* 이미지 잘라내기 */
+.preview-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* ← 세로 정렬 */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#crop-btn {
+  margin-top: 10px;
+}
+
+/* --- SSE 상태 표시 전용 --- */
+#status {
+  font-size: 1.1rem;
+  margin-top: 15px;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  transition: 0.3s;
+}
+
+/* 점점(...) 표시 애니메이션 */
+#status.loading::after {
+  content: " ...";
+  animation: dots 1s steps(3, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: " ."; }
+  40% { content: " .."; }
+  60%, 100% { content: " ..."; }
+}
+
+/*토스트 창*/
+.message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  z-index: 2000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.message-box.show {
+  display: block;
+  opacity: 1;
+}
+
+/*토글 스위치*/
+.mode-container {
+  position: relative;
+  display: inline-block;
+  margin: 0px;
+}
+
+/* 토글 스위치 전체 */
+.toggle-switch {
+  position: relative;
+  width: 55px;
+  height: 28px;
+  display: inline-block;
+  overflow: visible !important; /* 이걸 안 넣으면 툴팁이 잘림 */
+}
+
+.toggle-switch input {
+  pointer-events: none;
+}
+
+/* 스위치 배경 */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.3s ease;
+}
+
+/* 동그라미 */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+/* ON 상태 */
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(27px);
+}
+
+/* 툴팁 */
+.tooltip {
+  width: max-content;
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  font-size: 10px;
+  line-height: 1.4;
+  padding: 6px 12px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  z-index: 9999;
+}
+
+.toggle-switch:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/*비교 패널*/
+.compare-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.compare-item {
+  width: calc(25% - 8px);
+  min-width: 180px;
+
+  padding: 8px;
+  background: #fafafa;
+  border-radius: 8px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-sizing: border-box;
+}
+
+.compare-item h5 {
+  font-size: 12px;
+  /*margin: 0 0 6px 0;*/
+}
+
+.compare-item p {
+  /*margin: 2px 0;*/
+  font-size: 10px;
+}
+
+.result-container {
+  margin-top: 10px;
+}
+
+.action-buttons {
+  display: none;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #4caf50;
+  color: white;
+}
+
+.compare-panel { /*큰 컨테이너*/
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  display: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.compare-slots { /*컨테이너들 사이*/
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 0px;
+}
+
+.compare-slot { /*컨테이너*/
+  width: 46%;           /* 전체 박스 크기 */
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  font-size: 13px;
+}
+
+.compare-slot img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;      /* 비율 유지 + 잘라서 정사각 */
+  border-radius: 8px;
+}
+
+.compare-slot .label {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.compare-slot .percent {
+  flex-grow: 1;        /* bar 공간 최대로 확장 */
+  width: 100%;
+  margin-top: 2px;
+  font-size: 15px;
+  color: #555;
+}
+
 /* 모바일 */
 @media (max-width: 480px) {
   body {
@@ -782,6 +1022,42 @@ h1 {
 
 #contact {
   width: 100% !important;
+}
+
+
+/* ===============================
+   방명록 삭제 버튼 디자인
+   =============================== */
+
+#contact.contact-section #guestbookFeed .deleteBtn {
+  align-self: flex-end !important;
+  background: #e8ecff !important;         /* 은은한 파스텔 블루 */
+  color: #5660ff !important;               /* 선명한 메인 포인트 */
+  border: none !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: 0.22s ease !important;
+  margin-top: 6px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+/* hover 시 살짝 떠오르고 색 강조 */
+#contact.contact-section #guestbookFeed .deleteBtn:hover {
+  background: #d8ddff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(100, 110, 255, 0.18) !important;
+}
+
+/* active 시 클릭감 */
+#contact.contact-section #guestbookFeed .deleteBtn:active {
+  transform: translateY(0px) !important;
+  box-shadow: none !important;
 }
 
 
