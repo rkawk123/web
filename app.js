@@ -81,6 +81,8 @@ $btn.addEventListener("click", async () => {
     return;
   }
 
+  document.querySelector(".result-box")?.classList.remove("active");
+
   const fd = new FormData();
   fd.append("file", uploadFile);
 
@@ -149,6 +151,9 @@ $btn.addEventListener("click", async () => {
         <p>🌬️ 건조법: ${data.dry_method}</p>
         <p>⚠️ 주의사항: ${data.special_note}</p>
       `;
+
+       // 🔥 예측 성공 → 결과 박스 등장
+      document.querySelector(".result-box")?.classList.add("active");
 
       // 🔗 예측된 재질명으로 쇼핑몰 링크 생성
       const fabricName = data.ko_name || data.predicted_fabric;
@@ -266,36 +271,30 @@ setInterval(async () => {
 
 
 // 문의 폼 제출 기능만 별도
-document.addEventListener('DOMContentLoaded', function () {
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+document.getElementById("contactForm").addEventListener("submit", function (e) {
+  e.preventDefault(); // 새로고침 방지
 
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const message = document.getElementById('message').value.trim();
+  const name = document.getElementById("name").value.trim();
+  const contact = document.getElementById("contactInfo").value.trim();
+  const message = document.getElementById("message").value.trim();
 
-      if (!email || !message) {
-        alert("필수 항목을 작성하세요.");
-        return;
-      }
-
-      // 실제 배포 환경이라면 여기에 서버로 POST 등 구현!
-      // 데모는 Console에 출력만
-      console.log({
-        firstName,
-        lastName,
-        email,
-        phone,
-        message
-      });
-
-      alert("문의가 성공적으로 제출되었습니다!");
-
-      e.target.reset();
-    });
+  if (!name || !message) {
+    alert("이름과 메모는 필수입니다!");
+    return;
   }
+
+  // 방명록 항목 생성
+  const li = document.createElement("li");
+  li.innerHTML = `
+      <strong>${name}</strong>
+      <div class="date">${new Date().toLocaleString()}</div>
+      <p>${message}</p>
+      ${contact ? `<small>연락처: ${contact}</small>` : ""}
+  `;
+
+  // 피드에 추가
+  document.getElementById("guestbookFeed").prepend(li);
+
+  // 폼 초기화
+  document.getElementById("contactForm").reset();
 });
