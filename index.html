@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>스마트 원단 분석 · 이미지 분류기 (DenseNet)</title>
   <link rel="stylesheet" href="style.css" />
+  <script async src="https://docs.opencv.org/4.x/opencv.js" type="text/javascript"></script>
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 
 <body>
@@ -18,7 +22,14 @@
       <a href="#home">Home</a>
       <a href="#project">프로젝트 소개</a>
       <a href="#contact">문의하기</a>
-      <a href="#accessibility">접근성 설명</a>
+      <div class="mode-container">
+        <label class="toggle-switch">
+          <input type="checkbox" id="modeToggle">
+          <span class="slider"></span>
+
+          <div id="tooltip" class="tooltip">일반 모드입니다! 직접 체험해보세요!</div>
+        </label>
+      </div>
     </nav>
   </header>
 
@@ -43,20 +54,36 @@
           <div class="preview-wrapper">
             <img id="preview">
             <div class="scan-line" id="scan-line"></div>
+            <button id="crop-btn" class="predict-btn" style="display:none;">이미지 자르기</button>
           </div>
         
           <div class="result-box">
             <div id="result"></div>
             <div id="progressBarsContainer"></div>
             <div id="resultText"></div>
+            <div id="status"></div>
           </div>
         </div>
-      
+
+        <!-- 결과 출력 영역 -->
+        <div id="mainResult" class="main-result"></div>
+
+        <div class="action-buttons">
+          <button id="btnCompareStart" class="btn">비교해보기</button>
+          <button id="btnNew" class="btn">새로 분석하기</button>
+        </div>
+       
           
         <!-- 쇼핑몰 연동 -->
         <h3 id="shopTitle" style="display:none; text-align:left; margin-bottom:10px;">🛍 AI 추천</h3>
         <div id="shopLinks" class="shop-links" style="display:none;"></div>
-  
+ 
+        <!-- 비교 패널 (처음엔 display: none) -->
+        <div id="comparePanel" class="compare-panel">
+          <h5>비교 결과</h5>
+          <div id="compareSlots" class="compare-slots"></div>
+        </div>
+    
         <!-- 로딩 및 버튼 --> 
         <div class="footer">
           <button id="btn" class="predict-btn">▶ 예측하기</button>
