@@ -297,6 +297,7 @@ function goToInitialState() {
   lastResultSnapshot = null;
 }
 
+/*
 // =========================
 // 비교 기능 (신버전 UI에 맞게 재설계)
 // =========================
@@ -389,6 +390,123 @@ if ($btnNew) {
     renderCompareSlots();
     goToInitialState();
   });
+}*/
+
+//비교해보기
+let compareHistory = []; // { html, img } 형태로 저장
+let compareActive = false;
+
+// 예측 결과 UI 업데이트 함수
+function renderMainResult(resultHTML) {
+  $mainResult.innerHTML = resultHTML;
+}
+
+// 비교 해보기 버튼 클릭
+if ($btnCompareStart) {
+  $btnCompareStart.addEventListener("click", () => {
+    // 결과가 비어있으면 저장 금지
+    const hasResult = ($result && $result.innerHTML.trim()) || ($resultText && $resultText.innerHTML.trim());
+    if (!hasResult) {
+      showMessage("먼저 예측을 완료해주세요!");
+      return;
+    }
+    // 현재 snapshot 생성
+    const snap = saveCurrentResultSnapshot();
+    // 같은 내용 중복 저장 방지(간단 체크)
+    const last = compareHistory[compareHistory.length - 1];
+    if (!last || last.html !== snap.html) {
+      compareHistory.push(snap);
+    }
+    // 패널 열기 + 렌더
+    compareActive = true;
+    if ($comparePanel) $comparePanel.style.display = "block";
+    renderCompareSlots();
+    if (compareHistory.length >= MAX_COMPARE) {
+      showMessage("최대 4개까지 기록됩니다. 새로 분석하기만 가능해요!");
+      return;
+    }
+    // 초기화
+    goToInitialState();
+  });
+}
+
+// 새로 분석하기 버튼
+$btnNew.addEventListener("click", () => {
+  compareActive = false;
+  compareHistory = [];
+  $comparePanel.style.display = "none";
+  renderCompareSlots();
+  goToInitialState();
+});
+
+// 예측 후 버튼 보여주는 역할
+function onPredictCompleted(resultHTML) {
+    // resultHTML이 넘어오면 (또는 현재 DOM 요소들이 이미 채워져 있으면)
+    if (resultHTML) {
+      $mainResultBox.innerHTML = resultHTML;
+    } else {
+    }
+    // show action buttons
+    if ($btnCompareStart) $btnCompareStart.style.display = "inline-block";
+    if ($btnNew) $btnNew.style.display = "inline-block";
+}
+
+//비교 모드 일 때 결과 저장
+function addSnapshotIfSpace() {
+  if (!compareActive) return;
+  const snap = saveCurrentResultSnapshot();
+  const last = compareHistory[compareHistory.length - 1];
+  if (!last || last.html !== snap.html) {
+    compareHistory.push(snap);
+    renderCompareSlots();
+  }
+}
+// 비교 슬롯 실제로 그리는 함수
+function renderCompareSlots() {
+  if (!$compareSlots) return;
+  $compareSlots.innerHTML = "";
+  compareHistory.forEach((item, idx) => {
+    const slot = document.createElement("div");
+    slot.className = "compare-slot";
+    slot.innerHTML = `
+      ${item.html}
+    `;
+    $compareSlots.appendChild(slot);
+  });
+}
+
+function saveCurrentResultSnapshot() {
+  const imgSrc = $preview?.src || "";
+  const html = `
+    <div class="compare-card">
+      <div class="compare-image"><img src="${imgSrc}" alt="preview" /></div>
+      <div class="compare-result">
+        <div class="raw-result">${$result.innerHTML}</div>
+        <div class="raw-bars">${$container.innerHTML}</div>
+        <div class="raw-text">${$resultText.innerHTML}</div>
+      </div>
+    </div>
+  `;
+  return { html, img: imgSrc };
+}
+
+//초기 상태로 초기화 ++**
+function goToInitialState() {
+  // 프리뷰 제거
+  $preview.src = "";
+  $preview.style.display = "none";
+  // 결과 박스들 초기화
+  $result.innerHTML = "";
+  $container.innerHTML = "";
+  $resultText.innerHTML = "";
+  // 버튼 숨기기
+  $btnCompareStart.style.display = "none";
+  $btnNew.style.display = "none";
+  //쇼핑몰
+  $shopLinks.style.display = "none";
+  $shopTitle.style.display = "none";
+  $status.innerText = "";
+  $cropBtn.style.display = "none";
 }
 
 // =========================
