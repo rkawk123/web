@@ -265,6 +265,7 @@ async function startDemoLoop() {
     // 랜덤 파일 선택
     const fileName = pickRandomFile();
     if (!fileName) return;
+    const safeName = encodeURIComponent(fileName);
     const blob = await fetch(`/image/${fileName}`).then(r => r.blob());
     //미리보기
     showPreview(blob);
