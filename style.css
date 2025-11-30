@@ -140,6 +140,7 @@ nav a:hover { color: royalblue; }
 
 /* action-buttons → preview 아래 */
 .action-buttons {
+  display: flex;
   opacity: 0;
   transition: .3s;
   gap: 18px
@@ -151,20 +152,34 @@ nav a:hover { color: royalblue; }
   display: flex;
 }
 
-/* 미니멀 버튼 */
+/* ===============================
+   비교하기 / 새로 분석하기 버튼
+=============================== */
+
 .action-buttons .btn {
-  padding: 8px 18px;
-  border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid #ccc;
-  color: #333;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6e8bff, #4d66ff);
+  border: none;
+  color: white;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: .2s;
+  transition: 0.25s;
+  box-shadow: 0 4px 12px rgba(90,120,255,0.25);
 }
+
 .action-buttons .btn:hover {
-  background: #f0f0f0;
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #5f7cff, #4258ff);
+  box-shadow: 0 6px 14px rgba(90,120,255,0.35);
 }
+
+.action-buttons .btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 3px 8px rgba(90,120,255,0.25);
+}
+
 
 /* ===============================
    result-box height rollback
@@ -301,9 +316,12 @@ nav a:hover { color: royalblue; }
 /* 작은 버튼 */
 .feedback-wrong-btn {
   writing-mode: horizontal-tb !important;
-  rotate: 0deg !important;
   transform: none !important;
-  display: inline-block;
+  rotate: 0deg !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+
+  white-space: nowrap;  /* 텍스트 줄바꿈 방지 */
   
   position: absolute;
   right: 12px;
