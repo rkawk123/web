@@ -1,6 +1,6 @@
 const API = "https://backend-6i2t.onrender.com/predict";
 const API_STREAM = "https://backend-6i2t.onrender.com/predict_stream";
-const API_BASE = "https://backend-6i2t.onrender.com/demo_files";
+const API_BASE = "https://backend-6i2t.onrender.com";
 
 const $dropArea = document.getElementById("drop-area");
 const $file = document.getElementById("file");
@@ -244,7 +244,7 @@ function pickRandomFile() {
 
 //파일 목록 로드
 async function loadDemoFiles() {
-    const res = await fetch("/demo_files");
+    const res = await fetch(`${API_BASE}/demo_files`);
     const data = await res.json();
     demoFiles = data.files;
 }
@@ -266,7 +266,7 @@ async function startDemoLoop() {
     const fileName = pickRandomFile();
     if (!fileName) return;
     const safeName = encodeURIComponent(fileName);
-    const blob = await fetch(`/image/${fileName}`).then(r => r.blob());
+    const blob = await fetch(`${API_BASE}/image/${fileName}`).then(r => r.blob());
     //미리보기
     showPreview(blob);
     // 예측 실행
