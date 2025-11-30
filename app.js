@@ -1,6 +1,6 @@
 const API = "https://backend-6i2t.onrender.com/predict";
 const API_STREAM = "https://backend-6i2t.onrender.com/predict_stream";
-const API_BASE = "https://backend-6i2t.onrender.com";
+const API_BASE = "https://backend-6i2t.onrender.com/demo_files";
 
 const $dropArea = document.getElementById("drop-area");
 const $file = document.getElementById("file");
