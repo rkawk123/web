@@ -13,7 +13,7 @@ html, body {
 }
 
 #home {
-  padding: 10px 10px; 
+  padding: 10px 10px;
   background: linear-gradient(180deg, #eef3ff 0%, #f7faff 100%);
   box-sizing: border-box;
 }
@@ -257,17 +257,10 @@ nav a:hover {
 }*/
 
 #mainResultBox {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* 기존 margin-bottom 대체 */
-}
-
-#mainResultBox {
+  display: none;
   opacity: 0;
   transform: translateX(20px);
-  pointer-events: none;     /* 클릭 안됨 */
-  display: none;            /* 자리도 차지 안함 */
+  pointer-events: none;
   transition: opacity .4s ease, transform .4s ease;
 }
 
@@ -275,13 +268,11 @@ nav a:hover {
   display: flex;
   flex-direction: column;
   gap: 15px;
+
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
-}
 
-/* 예측 결과 박스 (카드형) */
-#mainResultBox {
   background: #f9faff;
   padding: 22px 26px;
   border-radius: 16px;
@@ -476,11 +467,6 @@ nav a:hover {
 
 
 
-
-
-
-
-
 /* 기능별 디자인 */
 /* 로딩 애니메이션 */
 #loading {
@@ -617,7 +603,6 @@ nav a:hover {
 }
 
 #crop-btn {
-
   margin-top: 10px;
 }
 
@@ -743,56 +728,8 @@ input:checked + .slider:before {
   pointer-events: auto;
 }
 
-/*비교 패널*/
-.compare-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.compare-item {
-  width: calc(25% - 8px);
-  min-width: 180px;
-
-  padding: 8px;
-  background: #fafafa;
-  border-radius: 8px;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  box-sizing: border-box;
-}
-
-.compare-item h5 {
-  font-size: 12px;
-  /*margin: 0 0 6px 0;*/
-}
-
-.compare-item p {
-  /*margin: 2px 0;*/
-  font-size: 10px;
-}
-
-.result-container {
-  margin-top: 10px;
-}
-
-.action-buttons {
-  display: none;
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #4caf50;
-  color: white;
-}
-
-.compare-panel { /*큰 컨테이너*/
+/* 비교 패널 전체 */
+.compare-panel {
   width: 100%;
   margin-top: 5px;
   padding: 10px;
@@ -803,15 +740,24 @@ input:checked + .slider:before {
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.compare-slots { /*컨테이너들 사이*/
+/* 🔥 가로 스크롤 컨테이너 */
+.compare-slots {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 0px;
+  flex-direction: row;
+  gap: 12px;
+
+  overflow-x: auto;       /* 가로 스크롤 */
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  white-space: nowrap;    /* 줄바꿈 방지 */
+  scroll-snap-type: x mandatory; /* optional - 스냅 부드럽게 */
 }
 
-.compare-slot { /*컨테이너*/
-  width: 46%;           /* 전체 박스 크기 */
+/* 비교 카드 개별 박스 */
+.compare-slot {
+  flex-shrink: 0;         /* 🔥 줄어들지 않게 */
+  /*width: 200px;           /* 원하는 카드 width */
+  width: 30%;           /* 개별 박스 크기 */
   background: #fafafa;
   padding: 10px;
   border-radius: 10px;
@@ -823,30 +769,60 @@ input:checked + .slider:before {
   align-items: center;
   text-align: center;
 
+  scroll-snap-align: start; /* optional */
   font-size: 13px;
 }
 
+.compare-slots { /*컨테이너들 사이*/
+  display: flex;
+  gap: 10px;
+  margin-top: 0px;
+}
+
+/* 스크롤바 디자인 */
+.compare-slots::-webkit-scrollbar {
+  height: 6px;
+}
+.compare-slots::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* 이미지 */
 .compare-slot img {
   width: 100px;
   height: 100px;
-  object-fit: cover;      /* 비율 유지 + 잘라서 정사각 */
+  object-fit: cover;
   border-radius: 8px;
 }
 
+/* 텍스트 */
 .compare-slot .label {
   margin-top: 6px;
   font-weight: 600;
   font-size: 13px;
 }
-
 .compare-slot .percent {
   flex-grow: 1;        /* bar 공간 최대로 확장 */
   width: 100%;
-  margin-top: 2px;
-  font-size: 15px;
+  margin-top: 4px;
+  font-size: 14px;
   color: #555;
 }
 
+.action-buttons {
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #4caf50;
+  color: white;
+}
 
 /* fade-in 및 slide-up 효과 */
 /* JS에서 style 직접 조작하므로 css 클래스로 따로 안 만들어도 되나, 만약 넣을 경우 */
@@ -1351,4 +1327,5 @@ input:checked + .slider:before {
     max-height: 300px !important;
   }
 }
+
 
