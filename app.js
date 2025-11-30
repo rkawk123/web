@@ -23,7 +23,6 @@ const $toggle = document.getElementById("modeToggle");      // 실제 체크박�
 const $tooltip = document.getElementById("tooltip");        // 툴팁
 const $toggleWrapper = document.querySelector(".toggle-switch"); // 스위치 wrapper
 const $container = document.getElementById("progressBarsContainer");
-//const $resultStatus = document.getElementById("resultStatus");
 let cropper;
 let $cropBtn = document.createElement("button");
 
@@ -32,6 +31,7 @@ const $comparePanel = document.getElementById("comparePanel");
 const $compareSlots = document.getElementById("compareSlots");
 const $btnCompareStart = document.getElementById("btnCompareStart");
 const $btnNew = document.getElementById("btnNew");
+const $analysis = document.querySelector(".analysis-row");
 
 $btnCompareStart.style.display = "none";
 $btnNew.style.display = "none";
@@ -83,13 +83,13 @@ function showPreview(fileOrBlob) {
     $shopTitle.style.display = "none";
     $container.innerHTML = "";
     $status.innerText = "";
-    $resultText.innerHTML = "";
 
     // Cropper 버튼 초기화
     if (!$cropBtn.parentNode) {
       $cropBtn.textContent = "이미지 자르기";
       $cropBtn.className = "predict-btn";
-      $previewWrapper.appendChild($cropBtn);
+      //$previewWrapper.appendChild($cropBtn);
+      $analysis.appendChild($cropBtn);
 
       $cropBtn.addEventListener("click", () => {
         // 기존 Cropper 제거
@@ -142,17 +142,6 @@ function closeOverlay() {
 
 //let serverChecked = false; // 서버 확인 한 번만 할 플래그
 
-//서버 연결
-async function checkServerReady() {
-  try {
-    const res = await fetch("/server_ready");
-    const json = await res.json();
-    return json.ready;
-  } catch {
-    return false;
-  }
-}
-
 // 버튼 클릭 + 슬라이드 (수정본)
 $btn.addEventListener("click", async () => {
   let uploadFile = $file.files?.[0] || $file._cameraBlob;
@@ -160,13 +149,6 @@ $btn.addEventListener("click", async () => {
     alert("이미지를 선택하거나 촬영하세요!");
     return;
   }
-
-  /* 서버 확인이 아직 안 되었으면 한 번만 체크
-  if (!serverChecked) {
-    $resultStatus.textContent = "🌐🔌 서버 연결 중...";
-    const isReady = await checkServerReady();
-    serverChecked = true;
-  }*/
 
   const fd = new FormData();
   fd.append("file", uploadFile);
@@ -179,7 +161,6 @@ $btn.addEventListener("click", async () => {
   $shopTitle.style.display = "none";
   $container.innerHTML = "";
   $status.innerText = "";
-  $resultText.innerHTML = "";
 
   // 슬라이드 interval id 저장
   if (!window.__fabric_slide_interval_id) window.__fabric_slide_interval_id = null;
@@ -257,10 +238,10 @@ $btn.addEventListener("click", async () => {
               setTimeout(() => {
                 $container.style.opacity = 1;
                 $container.style.transform = "translateY(0)";
-                $container.querySelectorAll(".progressBars").forEach((bar) => {
+                $container.querySelectorAll(".progressBars").forEach(($container) => {
                   const percent = bar.dataset.percent;
-                  bar.style.transition = "width 1.2s cubic-bezier(.42,0,.58,1)";
-                  bar.style.width = percent + "%";
+                  $container.style.transition = "width 1.2s cubic-bezier(.42,0,.58,1)";
+                  $container.style.width = percent + "%";
                 });
               }, 100);
 
@@ -374,7 +355,6 @@ $cameraBtn.addEventListener("click", async () => {
     $shopTitle.style.display = "none";
     $container.innerHTML = "";
     $status.innerText = "";
-    $resultText.innerHTML = "";
 
     $video.srcObject = stream;
     $video.autoplay = true;
@@ -386,7 +366,7 @@ $cameraBtn.addEventListener("click", async () => {
     await new Promise(resolve => $video.onloadedmetadata = () => { $video.play(); resolve(); });
 
     $captureBtn.className = "capture-circle";
-    $previewWrapper.appendChild($captureBtn);
+    $previewWrapper.appendChild($captureBtn); //
 
     //한 번만
     if (!captureBtnRegistered) {
@@ -406,13 +386,6 @@ $cameraBtn.addEventListener("click", async () => {
           $previewWrapper.appendChild($scanLine);
 
           $file._cameraBlob = blob; // 업로드용
-
-          /* 서버 체크 한 번만 하고 예측 시작
-          if (!serverChecked) {
-            $resultStatus.textContent = "🌐🔌 서버 연결 확인 중...";
-            const isReady = await checkServerReady();
-            serverChecked = true;
-          }*/
           $btn.click();             // 바로 서버에 POST
         });
     }
@@ -465,10 +438,10 @@ function renderMainResult(resultHTML) {
 }
 
 // 비교 해보기 버튼 클릭
-if (btnCompareStart) {
+if ($btnCompareStart) {
   $btnCompareStart.addEventListener("click", () => {
     // 결과가 비어있으면 저장 금지
-    const hasResult = (result && result.innerHTML.trim()) || (resultText && resultText.innerHTML.trim());
+    const hasResult = ($result && $result.innerHTML.trim()) || ($resultText && $resultText.innerHTML.trim());
     if (!hasResult) {
       showMessage("먼저 예측을 완료해주세요!");
       return;
@@ -506,12 +479,12 @@ $btnNew.addEventListener("click", () => {
 function onPredictCompleted(resultHTML) {
     // resultHTML이 넘어오면 (또는 현재 DOM 요소들이 이미 채워져 있으면)
     if (resultHTML) {
-      mainResultBox.innerHTML = resultHTML;
+      $mainResultBox.innerHTML = resultHTML;
     } else {
     }
     // show action buttons
-    if (btnCompareStart) $btnCompareStart.style.display = "inline-block";
-    if (btnNew) $btnNew.style.display = "inline-block";
+    if ($btnCompareStart) $btnCompareStart.style.display = "inline-block";
+    if ($btnNew) $btnNew.style.display = "inline-block";
 }
 
 //비교 모드 일 때 결과 저장
@@ -526,7 +499,7 @@ function addSnapshotIfSpace() {
 }
 // 비교 슬롯 실제로 그리는 함수
 function renderCompareSlots() {
-  if (!compareSlots) return;
+  if (!$compareSlots) return;
   $compareSlots.innerHTML = "";
   compareHistory.forEach((item, idx) => {
     const slot = document.createElement("div");
