@@ -48,38 +48,79 @@
           <button id="camera-btn" class="camera-btn">📷 카메라로 촬영</button>
           <p>이미지를 업로드하거나 카메라로 촬영해 원단 종류를 분석해보세요.</p>
         </div>
+
+        <div id="status"></div>
   
         <!-- 미리보기 -->
         <div class="analysis-row">
-          <div class="preview-wrapper">
-            <img id="preview">
-            <div class="scan-line" id="scan-line"></div>
-            <button id="crop-btn" class="predict-btn" style="display:none;">이미지 자르기</button>
+          <div class="preview-column"> 
+            <div class="preview-wrapper">
+              <img id="preview">
+              <div class="scan-line" id="scan-line"></div>
+              
+                <!-- 🔥 이미지 오버레이 자르기 버튼 -->
+              <button id="crop-btn" class="crop-overlay-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="6" r="3"></circle>
+                <circle cx="6" cy="18" r="3"></circle>
+                <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+              </svg>
+              </button>
+            </div>
+  
+             <!-- 🔥 버튼들은 preview-wrapper 바깥으로! -->
+            <div class="action-buttons">        
+              <button id="btnCompareStart" class="btn">비교해보기</button>
+              <button id="btnNew" class="btn">새로 분석하기</button>
+            </div>
           </div>
         
-          <div class="result-box">
+          <div class="result-box" id="resultBox">
             <div id="result"></div>
             <div id="progressBarsContainer"></div>
             <div id="resultText"></div>
-            <div id="status"></div>
+            <div class="feedback-wrapper">
+              <button id="wrongBtn" class="feedback-wrong-btn">예측이 틀렸어요</button>
+              <!-- 🔽 사용자 피드백 UI 추가 -->
+              <div id="feedbackSection" style="display:none;">
+                <div id="correctionForm" class="correction-form" style="display:none;">
+                  <label>정답 라벨 선택:</label>
+                  <select id="correctLabel" class="correct-label-select">
+                    <option value="COTTON">면</option>
+                    <option value="DENIM">데님</option>
+                    <option value="FUR">모피</option>
+                    <option value="PUFFER">패딩</option>              
+                    <option value="LINEN">린넨</option>
+                    <option value="NYLON">나일론</option>
+                    <option value="ACRYLIC">아크릴</option>              
+                    <option value="POLYESTER">폴리에스터</option>
+                    <option value="RAYON">레이온</option>
+                    <option value="SILK">실크</option>
+                    <option value="SPANDEX">스판덱스</option>
+                    <option value="VELVET">벨벳</option>
+                    <option value="WOOL">울</option>
+                  </select>
+                  <button id="submitCorrection" class="feedback-submit-btn">제출하기</button>
+                </div>
+              </div>
           </div>
         </div>
 
-        <!-- 결과 출력 영역 -->
-        <div id="mainResult" class="main-result"></div>
 
-        <div class="action-buttons">
-          <button id="btnCompareStart" class="btn">비교해보기</button>
-          <button id="btnNew" class="btn">새로 분석하기</button>
-        </div>
-       
+        <!-- 결과 출력 영역 -->
+        <!-- <div id="mainResult" class="main-result"></div>-->
+
+
+     
           
         <!-- 쇼핑몰 연동 -->
         <h3 id="shopTitle" style="display:none; text-align:left; margin-bottom:10px;">🛍 AI 추천</h3>
         <div id="shopLinks" class="shop-links" style="display:none;"></div>
  
         <!-- 비교 패널 (처음엔 display: none) -->
-        <div id="comparePanel" class="compare-panel">
+        <div id="comparePanel" class="compare-panel" style="display:none;>
           <h5>비교 결과</h5>
           <div id="compareSlots" class="compare-slots"></div>
         </div>
