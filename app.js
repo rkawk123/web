@@ -396,10 +396,10 @@ if ($btnNew) {
 let compareHistory = []; // { html, img } 형태로 저장
 let compareActive = false;
 
-// 예측 결과 UI 업데이트 함수
+/* 예측 결과 UI 업데이트 함수
 function renderMainResult(resultHTML) {
   $mainResult.innerHTML = resultHTML;
-}
+}*/
 
 // 비교 해보기 버튼 클릭
 if ($btnCompareStart) {
@@ -443,7 +443,7 @@ $btnNew.addEventListener("click", () => {
 function onPredictCompleted(resultHTML) {
     // resultHTML이 넘어오면 (또는 현재 DOM 요소들이 이미 채워져 있으면)
     if (resultHTML) {
-      $mainResultBox.innerHTML = resultHTML;
+      $resultBox.innerHTML = resultHTML;
     } else {
     }
     // show action buttons
