@@ -1,5 +1,5 @@
-const API = "http://192.168.0.178:10000/predict";
-const API_STREAM = "http://192.168.0.178:10000/predict_stream";
+const API = "https://backend-6i2t.onrender.com/predict";
+const API_STREAM = "https://backend-6i2t.onrender.com/predict_stream";
 
 const $dropArea = document.getElementById("drop-area");
 const $file = document.getElementById("file");
