@@ -1,3 +1,4 @@
+//모바일
 const API = "https://backend-6i2t.onrender.com/predict";
 const API_STREAM = "https://backend-6i2t.onrender.com/predict_stream";
 const API_BASE = "https://backend-6i2t.onrender.com";
@@ -29,8 +30,7 @@ let cropper;
 let $cropBtn = document.createElement("crop-btn"); //
 const $analysis = document.querySelector(".analysis-row"); //
 
-///const $mainResult = document.getElementById("mainResult");
-const $mainResultBox = document.getElementById("mainResultBox");
+const $resultBox = document.getElementById("result-box");
 const $comparePanel = document.getElementById("comparePanel");
 const $compareSlots = document.getElementById("compareSlots");
 const $btnCompareStart = document.getElementById("btnCompareStart");
@@ -107,7 +107,7 @@ let compareActive = false;
 
 // 예측 결과 UI 업데이트 함수
 function renderMainResult(resultHTML) {
-  $mainResultBox.innerHTML = resultHTML;
+  $resultBox.innerHTML = resultHTML;
 }
 
 // 백업로드 버튼 핸들러 함수
@@ -166,7 +166,7 @@ function handleNewAnalysis() {
 function onPredictCompleted(resultHTML) {
     // resultHTML이 넘어오면 (또는 현재 DOM 요소들이 이미 채워져 있으면)
     if (resultHTML) {
-      $mainResultBox.innerHTML = resultHTML;
+      $resultBox.innerHTML = resultHTML;
     } else {
     }
     // show action buttons
@@ -293,7 +293,7 @@ async function startDemoLoop() {
 //끄기
 function stopDemoLoop() {
     demoRunning = false;
-    handleNewAnalysis();
+    goToInitialState();
 }
 
 // 토글 스위치로 데모 모드 제어
@@ -431,7 +431,7 @@ $btn.addEventListener("click", async () => {
 //예측 함수
 async function runPrediction(uploadFile) {
   //let uploadFile = $file.files?.[0] || $file._cameraBlob;
-  document.querySelector("#mainResultBox")?.classList.remove("active"); //제거 시
+  document.querySelector("#resultBox")?.classList.remove("active"); //제거 시
 
   const fd = new FormData();
   fd.append("file", uploadFile);
@@ -538,7 +538,7 @@ async function runPrediction(uploadFile) {
             }
 
           // 🔥 예측 성공 → 결과 박스 등장
-          document.querySelector("#mainResultBox")?.classList.add("active");
+          document.querySelector("#resultBox")?.classList.add("active");
 
           // 상세 정보 + 슬라이드
           if (r.ko_name) {
