@@ -256,7 +256,7 @@ nav a:hover {
   max-width: 380px;
 }*/
 
-#mainResultBox {
+.result-box {
   display: none;
   opacity: 0;
   transform: translateX(20px);
@@ -264,7 +264,7 @@ nav a:hover {
   transition: opacity .4s ease, transform .4s ease;
 }
 
-#mainResultBox.active {
+.result-box.active {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -1327,5 +1327,4 @@ input:checked + .slider:before {
     max-height: 300px !important;
   }
 }
-
 
