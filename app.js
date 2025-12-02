@@ -699,17 +699,43 @@ async function runPrediction(uploadFile) {
             const fabric = (predictedFabric || "").toLowerCase();
             const query = encodeURIComponent(koName || predictedFabric);
 
+            // 브랜드별 이미지 배열
             const shopImages = {
               naver: [`./images/naver/${fabric}1.jpg`, `./images/naver/${fabric}2.jpg`],
               musinsa: [`./images/musinsa/${fabric}3.jpg`, `./images/musinsa/${fabric}4.jpg`],
               spao: [`./images/spao/${fabric}5.jpg`, `./images/spao/${fabric}6.jpg`]
             };
-
-            const shopLinksData = [
+            // 검색어 수정 & 숨기기 조건
+            let spaoQuery = r.ko_name;   // 기본 검색어
+            let hideSpao = false;
+            // 스파오 전용 검색어 변경 매핑
+            const spaoKeywordMap = {
+              "스판덱스": "스판",
+              "폴리에스터": "폴리",
+              "실크": "실키",
+              "모피": "플리스"
+            };
+            // 매핑된 값 교체
+            if (spaoKeywordMap[r.ko_name]) {
+              spaoQuery = spaoKeywordMap[r.ko_name];
+            }
+            // 벨벳은 스파오 완전 숨김
+            if (r.ko_name === "벨벳") {
+              hideSpao = true;
+            }
+            // 쇼핑몰 리스트 구성
+            let shopLinksData = [
               { name: "네이버 쇼핑", url: `https://search.shopping.naver.com/search/all?query=${query}`, images: shopImages.naver },
-              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa },
-              { name: "스파오", url: `https://www.spao.com/product/search.html?keyword=${query}`, images: shopImages.spao }
+              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa }
             ];
+            // 스파오 표시 여부 체크
+            if (!hideSpao) {
+              shopLinksData.push({
+                name: "스파오",
+                url: `https://www.spao.com/product/search.html?keyword=${encodeURIComponent(spaoQuery)}`,
+                images: shopImages.spao
+              });
+            }
 
             if ($shopLinks) {
               $shopLinks.innerHTML = shopLinksData
@@ -874,8 +900,39 @@ async function startCamera() {
   }
 }
 
-if ($cameraBtn) {
-  $cameraBtn.addEventListener("click", startCamera);
+// 촬영 버튼 클릭 → startCamera 실행
+function isMobile() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+function handleCameraClick() {
+  if (isMobile()) {
+    // 모바일: 카메라 앱 실행
+    const mobileInput = document.createElement("input");
+    mobileInput.type = "file";
+    mobileInput.accept = "image/*";
+    mobileInput.capture = "environment";
+    mobileInput.style.display = "none";
+
+    mobileInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      $file._cameraBlob = file;
+
+      // 미리보기 박스에 표시
+      showPreview(file);
+      $previewWrapper.appendChild($preview);
+    });
+
+    document.body.appendChild(mobileInput);
+    mobileInput.click();
+    document.body.removeChild(mobileInput);
+
+  } else {
+    // PC: 기존 카메라 장치
+    startCamera();
+  }
 }
 
 // =========================
@@ -996,3 +1053,5 @@ async function sendFeedback(predicted, corrected, file) {
     alert("정정 정보 전송 중 오류가 발생했습니다: " + err.message);
   }
 }
+
+
