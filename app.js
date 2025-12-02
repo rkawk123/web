@@ -27,7 +27,6 @@ const $toggleWrapper = document.querySelector(".toggle-switch"); // 스위치 wr
 const $container = document.getElementById("progressBarsContainer");
 const $box = document.getElementById("message-box"); //토스트창
 let cropper;
-let $cropBtn = document.createElement("crop-btn"); //
 const $analysis = document.querySelector(".analysis-row"); //
 
 const $resultBox = document.getElementById("result-box");
@@ -42,6 +41,7 @@ $btnNew.style.display = "none";
 const MAX_COMPARE = 4;
 
 let captureBtnRegistered = false;
+let currentController = null;
 
 // 드래그 & 드롭
 ["dragenter", "dragover"].forEach(eventName => {
@@ -116,7 +116,11 @@ function handleCompareStart() {
     ($result && $result.textContent.trim()) ||
     ($resultText && $resultText.innerHTML.trim());
 
+  // 결과가 없을 때
   if (!hasResult) {
+    if (!demoRunning) {
+      return;
+    }
     showMessage("먼저 예측을 완료해주세요!");
     return;
   }
@@ -170,8 +174,8 @@ function onPredictCompleted(resultHTML) {
     } else {
     }
     // show action buttons
-    if (btnCompareStart) $btnCompareStart.style.display = "inline-block";
-    if (btnNew) $btnNew.style.display = "inline-block";
+    if ($btnCompareStart) $btnCompareStart.style.display = "inline-block";
+    if ($btnNew) $btnNew.style.display = "inline-block";
 }
 //비교 모드 일 때 결과 저장
 function addSnapshotIfSpace() {
@@ -225,10 +229,13 @@ function goToInitialState() {
   $shopLinks.style.display = "none";
   $shopTitle.style.display = "none";
   $status.innerText = "";
-  $cropBtn.style.display = "none";
   // 프리뷰 제거
   $preview.src = "";
   $preview.style.display = "none";
+  // 스캔 라인, 상태
+  $status.innerText = "";
+  $loader.style.display = "none";
+  $scanLine.style.display = "none";
 }
 
 //데모 버전
@@ -244,7 +251,7 @@ function pickRandomFile() {
 
 //파일 목록 로드
 async function loadDemoFiles() {
-    const res = await fetch(`${API_BASE}/demo_files`);
+    const res = await fetch("/demo_files");
     const data = await res.json();
     demoFiles = data.files;
 }
@@ -265,8 +272,7 @@ async function startDemoLoop() {
     // 랜덤 파일 선택
     const fileName = pickRandomFile();
     if (!fileName) return;
-    const safeName = encodeURIComponent(fileName);
-    const blob = await fetch(`${API_BASE}/image/${fileName}`).then(r => r.blob());
+    const blob = await fetch(`/image/${fileName}`).then(r => r.blob());
     //미리보기
     showPreview(blob);
     // 예측 실행
@@ -281,11 +287,6 @@ async function startDemoLoop() {
     if (compareHistory.length >= MAX_COMPARE) {
       handleNewAnalysis();
     }
-    /*if (compareHistory.length >= MAX_COMPARE) {
-    compareHistory = [];
-    $compareSlots.innerHTML = "";
-    $comparePanel.style.display = "none";
-    }*/
     // 다음 루프로 자동 진행
   }
 }
@@ -293,7 +294,11 @@ async function startDemoLoop() {
 //끄기
 function stopDemoLoop() {
     demoRunning = false;
-    goToInitialState();
+    // ⭐ 스트림 강제 중단
+    if (currentController) {
+      currentController.abort();
+    }
+    handleNewAnalysis();
 }
 
 // 토글 스위치로 데모 모드 제어
@@ -368,7 +373,7 @@ function showPreview(fileOrBlob) {
     $container.innerHTML = "";
     $status.innerText = "";
 
-    // Cropper 버튼 초기화
+    /* Cropper 버튼 초기화
     if (!$cropBtn.parentNode) {
       $cropBtn.textContent = "이미지 자르기";
       $cropBtn.className = "upload-btn";
@@ -413,7 +418,7 @@ function showPreview(fileOrBlob) {
         });
       });
     }
-    $cropBtn.style.display = "inline-block";
+    $cropBtn.style.display = "inline-block"; */
   };
   reader.readAsDataURL(fileOrBlob);
 }
@@ -431,6 +436,13 @@ $btn.addEventListener("click", async () => {
 //예측 함수
 async function runPrediction(uploadFile) {
   //let uploadFile = $file.files?.[0] || $file._cameraBlob;
+  // 기존 스트림 중단
+  if (currentController) {
+    currentController.abort();
+  }
+
+  // 새로운 컨트롤러 생성
+  currentController = new AbortController();
   document.querySelector("#resultBox")?.classList.remove("active"); //제거 시
 
   const fd = new FormData();
@@ -450,7 +462,7 @@ async function runPrediction(uploadFile) {
   if (!window.__fabric_slide_interval_id) window.__fabric_slide_interval_id = null;
 
   try {
-    const res = await fetch(API_STREAM, { method: "POST", body: fd });
+    const res = await fetch(API_STREAM, { method: "POST", body: fd, signal: currentController.signal });
 
     if (!res.ok) {
       // 에러 응답이면 전체 텍스트 읽고 예외 발생
@@ -710,9 +722,52 @@ async function startCamera() {
     alert("카메라를 사용할 수 없습니다: " + err.message);
   }
 }
-// 촬영 버튼 클릭 → startCamera 실행
+/* 촬영 버튼 클릭 → startCamera 실행
 $cameraBtn.addEventListener("click", startCamera);
+*/
 
+//! 이 사이만 고침(모바일 카메라 앱)
+// 촬영 버튼 클릭 → startCamera 실행
+function isMobile() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+
+function handleCameraClick() {
+  if (isMobile()) {
+    // 모바일: 카메라 앱 실행
+    const mobileInput = document.createElement("input");
+    mobileInput.type = "file";
+    mobileInput.accept = "image/*";
+    mobileInput.capture = "environment";
+    mobileInput.style.display = "none";
+
+    mobileInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      $file._cameraBlob = file;
+
+      // 미리보기 박스에 표시
+      showPreview(file);
+      $previewWrapper.appendChild($preview);
+    });
+
+    document.body.appendChild(mobileInput);
+    mobileInput.click();
+    document.body.removeChild(mobileInput);
+
+  } else {
+    // PC: 기존 카메라 장치
+    startCamera();
+  }
+}
+
+// DOMContentLoaded 안에서 등록
+document.addEventListener("DOMContentLoaded", () => {
+  $cameraBtn.addEventListener("click", handleCameraClick);
+});
+//! 이 사이만 고침(모바일 카메라 앱)
 
 // 문의 폼 제출 기능
 document.addEventListener('DOMContentLoaded', function () {
@@ -748,4 +803,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-
