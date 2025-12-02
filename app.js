@@ -362,6 +362,16 @@ function renderCompareSlots() {
     return;
   }
 
+  $comparePanel.style.cssText = `
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 24px 0 !important;
+    padding: 16px !important;
+    overflow-x: auto !important;
+    clear: both !important;
+  `;  
+  
   // compareHistory가 있으면 반드시 comparePanel 표시
   $comparePanel.style.display = "block";
 
@@ -950,35 +960,139 @@ setInterval(async () => {
 }, 5 * 60 * 1000);
 
 // =========================
-// ⭐ 방명록 서버 API 연결 ⭐ (네 코드 기준)
+// ⭐ 방명록 (상태 표시 완벽 수정) ⭐
 // =========================
-document.addEventListener("DOMContentLoaded", () => {
+function initGuestbook() {
   const form = document.getElementById("contactForm");
   const feed = document.getElementById("guestbookFeed");
 
-  if (!form || !feed) return;
+  if (!form || !feed) {
+    console.warn("❌ 방명록 HTML 요소 없음");
+    return false;
+  }
 
-  async function loadGuestbook() {
+  // 🔥 상태 표시 div (1개만!)
+  let statusDiv = document.querySelector('#guestbookFeed + .local-status');
+  if (!statusDiv) {
+    statusDiv = document.createElement('div');
+    statusDiv.className = 'local-status';
+    statusDiv.style.cssText = 'font-size:12px;color:#6c84ff;text-align:right;padding:8px 0;margin-top:4px;';
+    feed.parentNode.appendChild(statusDiv);
+  }
+
+  const GUESTBOOK_KEY = 'smart-texture-guestbook-v1';
+
+  // 💾 로컬 저장
+  function saveGuestbook(data) {
+    localStorage.setItem(GUESTBOOK_KEY, JSON.stringify(data));
+  }
+
+  function loadGuestbookLocal() {
+    try {
+      return JSON.parse(localStorage.getItem(GUESTBOOK_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  // 📊 상태 업데이트 (중복 방지)
+  function updateStatus(count) {
+    statusDiv.innerHTML = `💾 로컬 저장됨 (${count}개)`;
+  }
+
+  // 피드 렌더링 (상태 자동 갱신)
+  function renderFeed(list) {
     feed.innerHTML = "";
-    const res = await fetch(API_guestbook);
-    const list = await res.json();
+    
+    if (!list || list.length === 0) {
+      feed.innerHTML = '<li style="text-align:center;padding:20px;color:#999;">아직 방명록이 없습니다.<br>첫 번째 방명록을 남겨주세요! 😊</li>';
+      updateStatus(0);
+      return;
+    }
 
     list.forEach(item => {
       const li = document.createElement("li");
       li.innerHTML = `
-        <strong>${item.name}</strong>
-        <div class="date">${item.created_at}</div>
-        <p>${item.message}</p>
-        ${item.contactInfo ? `<small>연락처: ${item.contactInfo}</small>` : ""}
-        <button class="deleteBtn" data-id="${item.id}">삭제</button>
+        <strong>${escapeHtml(item.name)}</strong>
+        <div class="date">${formatDate(item.created_at)}</div>
+        <p>${escapeHtml(item.message)}</p>
+        ${item.contactInfo ? `<small>📧 ${escapeHtml(item.contactInfo)}</small>` : ""}
+        <button class="deleteBtn" data-id="${item.id}">🗑️ 삭제</button>
       `;
       feed.appendChild(li);
     });
+
+    // 🔥 삭제 이벤트 (로컬 동기화 + 상태 갱신)
+    feed.querySelectorAll('.deleteBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (confirm('정말 삭제할까요?')) {
+          const id = parseInt(btn.dataset.id);
+          const newList = list.filter(item => item.id !== id);
+          
+          // 로컬 저장 + 화면 갱신 + 상태 갱신
+          saveGuestbook(newList);
+          renderFeed(newList); // 재렌더링 → 상태 자동 갱신
+          showMessage(`🗑️ 삭제됨 (${newList.length}개 남음)`);
+        }
+      });
+    });
+
+    // ✅ 상태 갱신
+    updateStatus(list.length);
   }
 
+  // 유틸리티
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatDate(dateStr) {
+    try {
+      return new Date(dateStr).toLocaleString("ko-KR", {
+        year: "numeric", month: "short", day: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
+    } catch {
+      return dateStr || "방금";
+    }
+  }
+
+  // 📥 초기 로드
+  async function loadGuestbook() {
+    const localData = loadGuestbookLocal();
+    
+    if (localData.length) {
+      renderFeed(localData); // 로컬 즉시 표시
+      console.log(`💾 ${localData.length}개 로컬 복원`);
+    } else {
+      renderFeed([]); // 빈 상태
+    }
+
+    // 서버 병합 시도 (선택)
+    try {
+      const res = await fetch(API_guestbook, { 
+        signal: AbortSignal.timeout(3000)
+      });
+      if (res.ok) {
+        const serverData = await res.json();
+        const merged = [...localData, ...serverData]
+          .filter((item, idx, arr) => arr.findIndex(i => i.id === item.id) === idx)
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
+        saveGuestbook(merged.slice(0, 50));
+        renderFeed(merged);
+      }
+    } catch (err) {
+      console.warn("서버 연결 생략 → 로컬만:", err.message);
+    }
+  }
+
+  // 📤 폼 제출
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
+    
     const name = document.getElementById("name").value.trim();
     const contactInfo = document.getElementById("contactInfo").value.trim();
     const message = document.getElementById("message").value.trim();
@@ -988,31 +1102,49 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    await fetch(API_guestbook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, contactInfo, message })
-    });
+    // 🔥 로컬 즉시 추가
+    const currentData = loadGuestbookLocal();
+    const newItem = {
+      id: Date.now(),
+      name, contactInfo, message,
+      created_at: new Date().toISOString()
+    };
+    
+    const updatedData = [newItem, ...currentData].slice(0, 50);
+    saveGuestbook(updatedData);
+    renderFeed(updatedData); // 상태 자동 갱신!
+
+    // 서버 백업 시도
+    try {
+      await fetch(API_guestbook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, contactInfo, message })
+      });
+    } catch (err) {
+      console.warn('서버 저장 생략:', err);
+    }
 
     form.reset();
-    loadGuestbook();
+    showMessage("✅ 방명록 저장됨!");
   });
 
-  feed.addEventListener("click", async (e) => {
-    if (!e.target.classList.contains("deleteBtn")) return;
-
-    const id = e.target.dataset.id;
-
-    if (confirm("정말 삭제할까요?")) {
-      await fetch(`${API_guestbook}/${id}`, {
-        method: "DELETE"
-      });
-      loadGuestbook();
-    }
-  });
-
+  // 🚀 시작
   loadGuestbook();
-});
+  return true;
+}
+
+// 🔥 실행
+if (!window.guestbookInitialized) {
+  window.guestbookInitialized = true;
+  console.log("🚀 방명록 완벽 버전 시작");
+  
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGuestbook);
+  } else {
+    setTimeout(initGuestbook, 100);
+  }
+}
 
 // =========================
 // 정정 피드백 제출
