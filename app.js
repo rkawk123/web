@@ -341,6 +341,7 @@ function unlockUI() {
 }
 
 window.onload = async () => {
+  
   await loadDemoFiles();
   resetIdleTimer();
 };
