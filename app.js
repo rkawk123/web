@@ -1053,5 +1053,3 @@ async function sendFeedback(predicted, corrected, file) {
     alert("정정 정보 전송 중 오류가 발생했습니다: " + err.message);
   }
 }
-
-
