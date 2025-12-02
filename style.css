@@ -266,41 +266,47 @@ nav a:hover { color: royalblue; }
   box-shadow: 0 3px 8px rgba(90,120,255,0.25);
 }
 
-/* 비교 패널 전체 영역 */
+
+/* 비교 패널 전체 + 스크롤 박스 */
 #comparePanel {
-  display: none;
+  display: none;                 /* 기본은 숨김 (JS에서 block으로 켜줌) */
   width: 100%;
   clear: both;
   margin-top: 20px;
-}
 
-.compare-panel {
-  margin-top: 20px;
   padding: 15px 0;
   background: #f7f8ff;
   border-radius: 12px;
   border: 1px solid #d8dcff;
-  overflow-x: auto;       /* 👈 가로 스크롤 활성화 */
+
+  /* 🔥 가로 스크롤 */
+  overflow-x: auto;
   overflow-y: hidden;
-  white-space: nowrap;    /* 👈 요소들을 한 줄로 */
+
+  /* 🔥 내부 요소 한 줄 고정 */
+  white-space: nowrap;
+
+  box-sizing: border-box;
 }
 
-/* 가로 슬라이더 */
+/* 카드들을 담는 컨테이너 */
+#compareSlots,
 .compare-slots {
-  display: inline-flex;   /* 👈 한 줄 정렬 */
+  display: inline-flex;          /* 🔥 가로로 나열 */
   gap: 15px;
   padding: 10px 15px;
 }
 
-/* 각 백업 카드 */
+/* 개별 카드 */
 .compare-card {
-  flex: 0 0 240px;        /* 👈 가로 길이 고정 */
+  flex: 0 0 240px;               /* 🔥 가로 240px 고정 */
   background: #ffffff;
   border: 1px solid #e0e3ff;
   border-radius: 10px;
   padding: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  position: relative;     /* 삭제 버튼 위치 기준 */
+  position: relative;
+  display: inline-block;         /* 스크롤 안정화 */
 }
 
 /* 이미지 */
@@ -317,7 +323,7 @@ nav a:hover { color: royalblue; }
   font-size: 14px;
 }
 
-/* ❌ 카드별 삭제 버튼 */
+/* 삭제 버튼 */
 .compare-delete {
   position: absolute;
   top: 8px;
@@ -337,6 +343,24 @@ nav a:hover { color: royalblue; }
 .compare-delete:hover {
   background: #ff3b3b;
 }
+
+/* ============================
+   비교 패널 레이아웃 강제 덮어쓰기
+============================ */
+#comparePanel #compareSlots,
+#comparePanel .compare-slots {
+  display: inline-flex !important;    /* ❗ 가로 배치 강제 */
+  flex-wrap: nowrap !important;       /* ❗ 줄바꿈 금지 */
+  gap: 15px !important;
+  padding: 10px 15px !important;
+  white-space: nowrap !important;
+}
+
+#comparePanel .compare-card {
+  flex: 0 0 240px !important;         /* ❗ 가로 길이 고정 */
+  display: inline-block !important;
+}
+
 
 
 
@@ -1484,4 +1508,3 @@ header {
     max-height: 300px !important;
   }
 }
-
