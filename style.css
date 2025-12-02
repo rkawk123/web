@@ -638,22 +638,33 @@ nav a:hover { color: royalblue; }
 
 .shop-links a {
   display: block;
+  position: relative;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  overflow: visible; /*hidden*/
+  width: 230px;
+  height: 150px;
+  border-radius: 10px;     /* 둥근 모서리 유지 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .shop-links img {
-  width: 230px; /* 원하는 크기로 조절 가능, 100 */
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  filter: none; /* 흑백 제거 */
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  border-radius: 10px; /* 이미지도 둥근 모서리 */
 }
 
 .shop-links img:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.shop-links img.active {
+  opacity: 1;
+  z-index: 1;
 }
 
 /* 푸터 */
@@ -1398,13 +1409,12 @@ header {
     padding: 20px; /*10*/
     align-items: center;
   }
-  
-  /*.preview-wrapper {
+  .preview-wrapper {
     width: 100% !important;
     /*height: auto !important;*/
     max-width: 320px; /* 모바일 기준 안정 크기 */
     margin: 0 auto;
-  }*/
+  }
 
   #preview {
     height: 100%;
@@ -1428,7 +1438,6 @@ header {
     font-size: 14px;
     border: none;
   }
-
   .action-buttons {
     width: 100%;
     display: flex;
@@ -1438,19 +1447,36 @@ header {
     box-sizing: border-box;
   }
 
-  .shop-links {
+.shop-links {
     justify-content: center; /* 가운데 정렬 유지 */
-    gap: 15px;             /* 이미지 간격 축소 */
+    gap: 10px;             /* 이미지 간격 축소 */
   }
 
-  .shop-links img {
-    width: 120px;           /* 모바일에 맞는 이미지 크기 */
-    height: auto;
-  }
+/* 컨테이너 */
+.shop-links a {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  overflow: visible; /*hidden*/
+  width: 120px;
+  height: 150px;
+  border-radius: 10px;     /* 둥근 모서리 유지 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 방명록 컨테이너 */
-@media (max-width: 900px) {
+/* 비교 카드 개별 박스 */
+.compare-slot {
+  flex-shrink: 0;         /* 🔥 줄어들지 않게 */
+  width: 70%;           /* 개별 박스 크기 */
+}
+
+.compare-slots { /*컨테이너들 사이*/
+  display: flex;
+  gap: 15px;
+  margin-top: 0px;
+}
+
+  /* 모바일 방명록 컨테이너 */
   #contact.contact-section .contact-container {
     flex-direction: column !important;
   }
@@ -1458,6 +1484,4 @@ header {
     max-height: 300px !important;
   }
 }
-
-
 
