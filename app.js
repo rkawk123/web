@@ -118,9 +118,6 @@ function handleCompareStart() {
 
   // 결과가 없을 때
   if (!hasResult) {
-    if (!demoRunning) {
-      return;
-    }
     showMessage("먼저 예측을 완료해주세요!");
     return;
   }
@@ -232,10 +229,6 @@ function goToInitialState() {
   // 프리뷰 제거
   $preview.src = "";
   $preview.style.display = "none";
-  // 스캔 라인, 상태
-  $status.innerText = "";
-  $loader.style.display = "none";
-  $scanLine.style.display = "none";
 }
 
 //데모 버전
@@ -301,6 +294,14 @@ function stopDemoLoop() {
     handleNewAnalysis();
 }
 
+/*강제 초기화
+function hardResetCompare() {
+  compareActive = false;
+  compareHistory = [];
+  if ($comparePanel) $comparePanel.style.display = "none";
+  renderCompareSlots();
+}*/
+
 // 토글 스위치로 데모 모드 제어
 $toggle.addEventListener("change", () => {
   if ($toggle.checked) {
@@ -309,6 +310,7 @@ $toggle.addEventListener("change", () => {
   } else {
     stopDemoLoop();
     unlockUI();
+    hardResetCompare();
   }
 });
 
@@ -564,7 +566,7 @@ async function runPrediction(uploadFile) {
             const fabric = (r.predicted_fabric || "").toLowerCase();
             const query = encodeURIComponent(r.ko_name);
 
-            // 브랜드별 이미지 배열
+            /* 브랜드별 이미지 배열
             const shopImages = {
               naver: [`./images/naver/${fabric}1.jpg`, `./images/naver/${fabric}2.jpg`],
               musinsa: [`./images/musinsa/${fabric}3.jpg`, `./images/musinsa/${fabric}4.jpg`],
@@ -575,7 +577,39 @@ async function runPrediction(uploadFile) {
               { name: "네이버 쇼핑", url: `https://search.shopping.naver.com/search/all?query=${query}`, images: shopImages.naver },
               { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa },
               { name: "스파오", url: `https://www.spao.com/product/search.html?keyword=${query}`, images: shopImages.spao }
+            ];*/
+
+            // 브랜드별 이미지 배열
+            const shopImages = {
+              naver: [`./images/naver/${fabric}1.jpg`, `./images/naver/${fabric}2.jpg`],
+              musinsa: [`./images/musinsa/${fabric}3.jpg`, `./images/musinsa/${fabric}4.jpg`],
+              spao: [`./images/spao/${fabric}5.jpg`, `./images/spao/${fabric}6.jpg`]
+            };
+
+            // 검색어 수정 & 숨기기 조건
+            let spaoQuery = r.ko_name;   // 기본 검색어
+            let hideSpao = false;
+
+            // 스판덱스 → 스판 검색어 교체
+            if (r.ko_name === "스판덱스") {
+              spaoQuery = "스판";
+            }
+
+            // 실크 벨벳 → 스파오 숨기기
+            if (r.ko_name === "실크 벨벳") {
+              hideSpao = true;
+            }
+
+            // 🔥 쇼핑몰 리스트 구성
+            let shopLinksData = [
+              { name: "네이버 쇼핑", url: `https://search.shopping.naver.com/search/all?query=${query}`, images: shopImages.naver },
+              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa }
             ];
+
+            // 스파오 표시 여부 체크
+            if (!hideSpao) {
+              shopLinksData.push({ name: "스파오", url: `https://www.spao.com/product/search.html?keyword=${encodeURIComponent(spaoQuery)}`, images: shopImages.spao });
+            }
 
             // 초기 이미지 생성
             $shopLinks.innerHTML = shopLinksData
@@ -722,6 +756,7 @@ async function startCamera() {
     alert("카메라를 사용할 수 없습니다: " + err.message);
   }
 }
+
 /* 촬영 버튼 클릭 → startCamera 실행
 $cameraBtn.addEventListener("click", startCamera);
 */
@@ -803,3 +838,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
