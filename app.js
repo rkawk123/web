@@ -877,9 +877,50 @@ async function startCamera() {
   }
 }
 
-if ($cameraBtn) {
+/*if ($cameraBtn) {
   $cameraBtn.addEventListener("click", startCamera);
+}*/
+
+// 촬영 버튼 클릭 → startCamera 실행
+function isMobile() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 }
+
+
+function handleCameraClick() {
+  if (isMobile()) {
+    // 모바일: 카메라 앱 실행
+    const mobileInput = document.createElement("input");
+    mobileInput.type = "file";
+    mobileInput.accept = "image/*";
+    mobileInput.capture = "environment";
+    mobileInput.style.display = "none";
+
+    mobileInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      $file._cameraBlob = file;
+
+      // 미리보기 박스에 표시
+      showPreview(file);
+      $previewWrapper.appendChild($preview);
+    });
+
+    document.body.appendChild(mobileInput);
+    mobileInput.click();
+    document.body.removeChild(mobileInput);
+
+  } else {
+    // PC: 기존 카메라 장치
+    startCamera();
+  }
+}
+
+// DOMContentLoaded 안에서 등록
+document.addEventListener("DOMContentLoaded", () => {
+  $cameraBtn.addEventListener("click", handleCameraClick);
+});
 
 // =========================
 // 5분마다 서버 ping
