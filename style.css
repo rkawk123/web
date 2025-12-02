@@ -1398,12 +1398,13 @@ header {
     padding: 20px; /*10*/
     align-items: center;
   }
-  .preview-wrapper {
+  
+  /*.preview-wrapper {
     width: 100% !important;
     /*height: auto !important;*/
     max-width: 320px; /* 모바일 기준 안정 크기 */
     margin: 0 auto;
-  }
+  }*/
 
   #preview {
     height: 100%;
