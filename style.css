@@ -1,3 +1,10 @@
+/* 전체 요소 패딩·보더까지 포함해서 width 계산 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* 기본 레이아웃 */
 html, body {
   margin: 0;
@@ -887,95 +894,6 @@ input:checked + .slider:before {
   margin-top: 10px;
 }
 
-
-
-/* 모바일 */
-@media (max-width: 480px) {
-  body {
-    /*padding-top: 20px;  /*상단 여백*/
-  }
-
-  header {
-    flex-direction: column;     /* 위아래로 배치 */
-    justify-content: center;    /* 가로 중앙 */
-    align-items: center;        /* 세로 중앙 */
-    padding: 15px 0;            /* 상하 여백 줄이기 */
-  }
-
-  .brand {
-    font-size: 18px;
-  }
-
-  .logo {
-    margin-bottom: 10px;
-    margin-top: 10px;
-    align-items: center;  /* 세로 가운데 맞춤 */
-    justify-content: center; /* 가로 가운데 맞춤 */
-  }
-
-  nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;        /* 가운데 정렬 */
-    gap: 10px;
-    margin-right: 20px; /*시각적 중심 보정*/
-  }
-
-  h1 {
-    width: 90%;        /*제목 폭*/
-    font-size: 20px;
-    margin: 20px;  /**/
-  }
-
-  p {
-    white-space: normal; /* 줄바꿈 허용 */
-    word-break: keep-all; /* 단어 단위로 줄바꿈 */
-    text-align: center;
-  }
-
-  .container {
-    width: 100%; /*90*/
-    height: auto;
-    max-width: 360px;
-    padding: 20px; /*10*/
-    align-items: center;
-  }
-
-  #preview {
-    max-height: 150px; /*120*/
-    width: 100%; /**/
-  }
-
-  #resultText, #result {
-    max-width: 360px;
-    margin: 0 auto;
-  }
-
-  .capture-circle {
-    width: 50px;
-    height: 50px;
-    border-width: 3px;
-  }
-
-  .upload-btn,
-  .camera-btn,
-  .predict-btn {
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-
-  .shop-links {
-    justify-content: center; /* 가운데 정렬 유지 */
-    gap: 15px;             /* 이미지 간격 축소 */
-  }
-
-  .shop-links img {
-    width: 120px;           /* 모바일에 맞는 이미지 크기 */
-    height: auto;
-  }
-}
-
-
 /* 전체 영역 */
 .project {
   padding: 100px 20px;
@@ -1298,17 +1216,6 @@ input:checked + .slider:before {
   white-space: pre-line !important;
 }
 
-/* 반응형 */
-@media (max-width: 900px) {
-  #contact.contact-section .contact-container {
-    flex-direction: column !important;
-  }
-  #contact.contact-section #guestbookFeed {
-    max-height: 300px !important;
-  }
-}
-
-
 /* 방명록 컨테이너의 부모 .container 영향 완전 무시 */
 #contact .contact-container {
   display: flex !important;
@@ -1364,3 +1271,192 @@ input:checked + .slider:before {
   transform: translateY(0px) !important;
   box-shadow: none !important;
 }
+
+
+
+
+/* ========================
+  모바일 ==================== */
+@media (max-width: 480px) {
+body {
+  font-family: Arial, Helvetica, "Apple SD Gothic Neo", "맑은 고딕", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f4ff;     /* 배경색 */
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#home {
+  /*padding: 10px 10px;*/
+  background: linear-gradient(180deg, #eef3ff 0%, #f7faff 100%);
+  box-sizing: border-box;
+}
+
+#home h1 {
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  color: #1f2b46;
+  /*margin-bottom: 20px;*/
+}
+
+/* 메인 컨테이너 */
+#home .container {
+  width: 100%;
+  padding: 24px 16px;
+  max-width: 400px !important;
+  margin: 0 auto;
+}
+
+/* 업로드 영역 */
+#home .header {
+  background: #f8faff;
+  border: 2px dashed #6e8bff;
+  border-radius: 16px;
+  padding: 30px 20px;
+  transition: 0.25s;
+}
+
+#home .header:hover {
+  border-color: #4d66ff;
+  background: #f1f4ff;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+}
+
+header {
+    width: 100% !important;
+    padding: 10px 0 !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  nav {
+    width: 100% !important;
+    display: flex;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  nav a {
+    margin: 0 !important;      /* ← 문제 핵심 해결 */
+    padding: 4px 6px !important;
+    font-size: 16px !important;
+  }
+
+  .toggle-switch {
+    transform: scale(1);     /* 스위치 크기 줄이기 */
+  }
+
+  header {
+    flex-direction: column;     /* 위아래로 배치 */
+    justify-content: center;    /* 가로 중앙 */
+    align-items: center;        /* 세로 중앙 */
+    padding: 15px 0;            /* 상하 여백 줄이기 */
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .logo {
+    margin: 10px 0;
+    align-items: center;  /* 세로 가운데 맞춤 */
+    justify-content: center; /* 가로 가운데 맞춤 */
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;        /* 가운데 정렬 */
+    gap: 10px;
+    margin-right: 20px; /*시각적 중심 보정*/
+  }
+
+  h1 {
+    width: 90%;        /*제목 폭*/
+    font-size: 20px;
+    margin: 20px;  /**/
+  }
+
+  h2, p {
+    white-space: normal; /* 줄바꿈 허용 */
+    word-break: keep-all; /* 단어 단위로 줄바꿈 */
+    text-align: center;
+  }
+
+  .container { /*컨테이너 내부*/
+    width: 100%; /*90*/
+    height: auto;
+    max-width: 360px;
+    padding: 20px; /*10*/
+    align-items: center;
+  }
+  .preview-wrapper {
+    width: 100% !important;
+    /*height: auto !important;*/
+    max-width: 320px; /* 모바일 기준 안정 크기 */
+    margin: 0 auto;
+  }
+
+  #preview {
+    height: 100%;
+    width: 100%;
+  }
+
+  #resultText, #result {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .capture-circle {
+    width: 50px;
+    height: 50px;
+    border-width: 3px;
+  }
+  .upload-btn,
+  .camera-btn,
+  .predict-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+  }
+
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .shop-links {
+    justify-content: center; /* 가운데 정렬 유지 */
+    gap: 15px;             /* 이미지 간격 축소 */
+  }
+
+  .shop-links img {
+    width: 120px;           /* 모바일에 맞는 이미지 크기 */
+    height: auto;
+  }
+}
+
+/* 방명록 컨테이너 */
+@media (max-width: 900px) {
+  #contact.contact-section .contact-container {
+    flex-direction: column !important;
+  }
+  #contact.contact-section #guestbookFeed {
+    max-height: 300px !important;
+  }
+}
+
+
+
