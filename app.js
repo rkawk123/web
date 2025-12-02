@@ -491,8 +491,26 @@ async function startDemoLoop() {
 }
 
 function stopDemoLoop() {
-  demoRunning = false;
-  goToInitialState();
+    demoRunning = false;
+    // 스트림 강제 중단
+    if (currentController) {
+      currentController.abort();
+    }
+    //비교 기록 전체 초기화
+    compareActive = false;
+    compareHistory = [];
+    handleNewAnalysis();
+    //모든 setInterval 제거
+    if (window.__fabric_slide_interval_id) {
+      clearInterval(window.__fabric_slide_interval_id);
+      window.__fabric_slide_interval_id = null;
+    }
+    //모든 setTimeout 초기화
+    if (idleTimer) {
+      clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+    goToInitialState();
 }
 
 // UI 잠금/해제
@@ -702,17 +720,43 @@ async function runPrediction(uploadFile) {
             const fabric = (predictedFabric || "").toLowerCase();
             const query = encodeURIComponent(koName || predictedFabric);
 
+            // 브랜드별 이미지 배열
             const shopImages = {
               naver: [`./images/naver/${fabric}1.jpg`, `./images/naver/${fabric}2.jpg`],
               musinsa: [`./images/musinsa/${fabric}3.jpg`, `./images/musinsa/${fabric}4.jpg`],
               spao: [`./images/spao/${fabric}5.jpg`, `./images/spao/${fabric}6.jpg`]
             };
-
-            const shopLinksData = [
+            // 검색어 수정 & 숨기기 조건
+            let spaoQuery = r.ko_name;   // 기본 검색어
+            let hideSpao = false;
+            // 스파오 전용 검색어 변경 매핑
+            const spaoKeywordMap = {
+              "스판덱스": "스판",
+              "폴리에스터": "폴리",
+              "실크": "실키",
+              "모피": "플리스"
+            };
+            // 매핑된 값 교체
+            if (spaoKeywordMap[r.ko_name]) {
+              spaoQuery = spaoKeywordMap[r.ko_name];
+            }
+            // 벨벳은 스파오 완전 숨김
+            if (r.ko_name === "벨벳") {
+              hideSpao = true;
+            }
+            // 쇼핑몰 리스트 구성
+            let shopLinksData = [
               { name: "네이버 쇼핑", url: `https://search.shopping.naver.com/search/all?query=${query}`, images: shopImages.naver },
-              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa },
-              { name: "스파오", url: `https://www.spao.com/product/search.html?keyword=${query}`, images: shopImages.spao }
+              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa }
             ];
+            // 스파오 표시 여부 체크
+            if (!hideSpao) {
+              shopLinksData.push({
+                name: "스파오",
+                url: `https://www.spao.com/product/search.html?keyword=${encodeURIComponent(spaoQuery)}`,
+                images: shopImages.spao
+              });
+            }
 
             if ($shopLinks) {
               $shopLinks.innerHTML = shopLinksData
