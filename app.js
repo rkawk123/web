@@ -283,6 +283,7 @@ function goToInitialState() {
     $previewWrapper.innerHTML = "";
     $previewWrapper.appendChild($preview);
     if ($scanLine) $previewWrapper.appendChild($scanLine);
+    if ($cropBtn) $previewWrapper.appendChild($cropBtn);  // ⭐ 이 줄 추가!
     $previewWrapper.classList.remove("has-image");
   }
 
@@ -312,10 +313,6 @@ function goToInitialState() {
   // 🔥 상태 메시지 초기화
   if ($status) $status.innerText = "";
   if ($predictStatus) $predictStatus.innerText = "";
-
-  // 🔥 크롭 버튼 숨기기 (새 이미지 선택하면 다시 나타남)
-  const cropBtn = document.getElementById("crop-btn");
-  if (cropBtn) cropBtn.style.display = "none";
 
   // 🔥 자동 슬라이드 초기화
   if (window.__fabric_slide_interval_id) {
@@ -491,26 +488,8 @@ async function startDemoLoop() {
 }
 
 function stopDemoLoop() {
-    demoRunning = false;
-    // 스트림 강제 중단
-    if (currentController) {
-      currentController.abort();
-    }
-    //비교 기록 전체 초기화
-    compareActive = false;
-    compareHistory = [];
-    handleNewAnalysis();
-    //모든 setInterval 제거
-    if (window.__fabric_slide_interval_id) {
-      clearInterval(window.__fabric_slide_interval_id);
-      window.__fabric_slide_interval_id = null;
-    }
-    //모든 setTimeout 초기화
-    if (idleTimer) {
-      clearTimeout(idleTimer);
-      idleTimer = null;
-    }
-    goToInitialState();
+  demoRunning = false;
+  goToInitialState();
 }
 
 // UI 잠금/해제
@@ -720,43 +699,17 @@ async function runPrediction(uploadFile) {
             const fabric = (predictedFabric || "").toLowerCase();
             const query = encodeURIComponent(koName || predictedFabric);
 
-            // 브랜드별 이미지 배열
             const shopImages = {
               naver: [`./images/naver/${fabric}1.jpg`, `./images/naver/${fabric}2.jpg`],
               musinsa: [`./images/musinsa/${fabric}3.jpg`, `./images/musinsa/${fabric}4.jpg`],
               spao: [`./images/spao/${fabric}5.jpg`, `./images/spao/${fabric}6.jpg`]
             };
-            // 검색어 수정 & 숨기기 조건
-            let spaoQuery = r.ko_name;   // 기본 검색어
-            let hideSpao = false;
-            // 스파오 전용 검색어 변경 매핑
-            const spaoKeywordMap = {
-              "스판덱스": "스판",
-              "폴리에스터": "폴리",
-              "실크": "실키",
-              "모피": "플리스"
-            };
-            // 매핑된 값 교체
-            if (spaoKeywordMap[r.ko_name]) {
-              spaoQuery = spaoKeywordMap[r.ko_name];
-            }
-            // 벨벳은 스파오 완전 숨김
-            if (r.ko_name === "벨벳") {
-              hideSpao = true;
-            }
-            // 쇼핑몰 리스트 구성
-            let shopLinksData = [
+
+            const shopLinksData = [
               { name: "네이버 쇼핑", url: `https://search.shopping.naver.com/search/all?query=${query}`, images: shopImages.naver },
-              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa }
+              { name: "무신사", url: `https://www.musinsa.com/search/musinsa/integration?keyword=${query}`, images: shopImages.musinsa },
+              { name: "스파오", url: `https://www.spao.com/product/search.html?keyword=${query}`, images: shopImages.spao }
             ];
-            // 스파오 표시 여부 체크
-            if (!hideSpao) {
-              shopLinksData.push({
-                name: "스파오",
-                url: `https://www.spao.com/product/search.html?keyword=${encodeURIComponent(spaoQuery)}`,
-                images: shopImages.spao
-              });
-            }
 
             if ($shopLinks) {
               $shopLinks.innerHTML = shopLinksData
@@ -921,50 +874,9 @@ async function startCamera() {
   }
 }
 
-/*if ($cameraBtn) {
+if ($cameraBtn) {
   $cameraBtn.addEventListener("click", startCamera);
-}*/
-
-// 촬영 버튼 클릭 → startCamera 실행
-function isMobile() {
-  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 }
-
-
-function handleCameraClick() {
-  if (isMobile()) {
-    // 모바일: 카메라 앱 실행
-    const mobileInput = document.createElement("input");
-    mobileInput.type = "file";
-    mobileInput.accept = "image/*";
-    mobileInput.capture = "environment";
-    mobileInput.style.display = "none";
-
-    mobileInput.addEventListener("change", (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      $file._cameraBlob = file;
-
-      // 미리보기 박스에 표시
-      showPreview(file);
-      $previewWrapper.appendChild($preview);
-    });
-
-    document.body.appendChild(mobileInput);
-    mobileInput.click();
-    document.body.removeChild(mobileInput);
-
-  } else {
-    // PC: 기존 카메라 장치
-    startCamera();
-  }
-}
-
-// DOMContentLoaded 안에서 등록
-document.addEventListener("DOMContentLoaded", () => {
-  $cameraBtn.addEventListener("click", handleCameraClick);
-});
 
 // =========================
 // 5분마다 서버 ping
