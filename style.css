@@ -1308,203 +1308,312 @@ input:checked + .slider:before {
 }
 
 
-
-
 /* ========================
-  모바일 ==================== */
+   🔥 모바일 헤더(내비게이션바) 완전 재디자인
+========================== */
 @media (max-width: 480px) {
-body {
-  font-family: Arial, Helvetica, "Apple SD Gothic Neo", "맑은 고딕", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f4ff;     /* 배경색 */
-}
-
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-#home {
-  /*padding: 10px 10px;*/
-  background: linear-gradient(180deg, #eef3ff 0%, #f7faff 100%);
-  box-sizing: border-box;
-}
-
-#home h1 {
-  font-size: 24px;
-  font-weight: 800;
-  text-align: center;
-  color: #1f2b46;
-  /*margin-bottom: 20px;*/
-}
-
-/* 메인 컨테이너 */
-#home .container {
-  width: 100%;
-  padding: 24px 16px;
-  max-width: 400px !important;
-  margin: 0 auto;
-}
-
-/* 업로드 영역 */
-#home .header {
-  background: #f8faff;
-  border: 2px dashed #6e8bff;
-  border-radius: 16px;
-  padding: 30px 20px;
-  transition: 0.25s;
-}
-
-#home .header:hover {
-  border-color: #4d66ff;
-  background: #f1f4ff;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
-}
-
-header {
-    width: 100% !important;
-    padding: 10px 0 !important;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  /* 🔥 1. 헤더 전체 압축 */
+  header {
+    padding: 12px 16px !important;
+    min-height: 60px !important; /* 높이 고정 */
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background: #fff !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
   }
 
+  /* 🔥 2. 로고 간결화 */
+  .logo {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .logo .dot {
+    width: 10px !important;
+    height: 10px !important;
+    margin-right: 6px !important;
+  }
+
+  .logo .brand {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #232323 !important;
+  }
+
+  /* 🔥 3. 네비 + 토글 가로 1줄 배치 */
   nav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     width: 100% !important;
-    display: flex;
-    justify-content: center !important;
-    gap: 10px !important;
+    gap: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
   }
 
+  /* 🔥 4. 네비 링크 (작고 촘촘) */
   nav a {
-    margin: 0 !important;      /* ← 문제 핵심 해결 */
-    padding: 4px 6px !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
+    padding: 6px 10px !important; /* 터치 44px 기준 */
+    margin: 0 !important;
+    border-radius: 8px !important;
+    min-width: 44px !important; /* 터치 영역 보장 */
+    text-align: center !important;
+    transition: all 0.2s !important;
+  }
+
+  nav a:hover, nav a:active {
+    background: rgba(110,140,255,0.15) !important;
+    color: #4d66ff !important;
+  }
+
+  /* 🔥 5. 토글 스위치 소형화 */
+  .mode-container {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .toggle-switch {
-    transform: scale(1);     /* 스위치 크기 줄이기 */
+    width: 48px !important;
+    height: 24px !important;
+    transform: scale(0.85) !important;
   }
 
-  header {
-    flex-direction: column;     /* 위아래로 배치 */
-    justify-content: center;    /* 가로 중앙 */
-    align-items: center;        /* 세로 중앙 */
-    padding: 15px 0;            /* 상하 여백 줄이기 */
+  .slider {
+    border-radius: 20px !important;
   }
 
-  .brand {
-    font-size: 18px;
+  .slider:before {
+    width: 18px !important;
+    height: 18px !important;
+    left: 3px !important;
+    bottom: 3px !important;
   }
 
-  .logo {
-    margin: 10px 0;
-    align-items: center;  /* 세로 가운데 맞춤 */
-    justify-content: center; /* 가로 가운데 맞춤 */
+  input:checked + .slider:before {
+    transform: translateX(24px) !important;
   }
 
-  nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;        /* 가운데 정렬 */
-    gap: 10px;
-    margin-right: 20px; /*시각적 중심 보정*/
+  /* 🔥 6. 툴팁 모바일 숨김 (공간 절약) */
+  .tooltip {
+    display: none !important;
   }
 
-  h1 {
-    width: 90%;        /*제목 폭*/
-    font-size: 20px;
-    margin: 20px;  /**/
+  /* 🔥 7. 햄버거 메뉴 대체 (옵션) */
+  .mode-container::before {
+    content: "⚙️" !important;
+    font-size: 16px !important;
+    display: none;
   }
 
-  h2, p {
-    white-space: normal; /* 줄바꿈 허용 */
-    word-break: keep-all; /* 단어 단위로 줄바꿈 */
-    text-align: center;
+  /* 🔥 8. 홈 섹션 상단 여백 보정 */
+  #home {
+    padding-top: 80px !important; /* 헤더 60px + 여백 */
   }
+}
 
-  .container { /*컨테이너 내부*/
-    width: 100%; /*90*/
-    height: auto;
-    max-width: 360px;
-    padding: 20px; /*10*/
-    align-items: center;
-  }
-  .preview-wrapper {
+/* ========================
+   🔥 모바일 레이아웃 붕괴 완전 해결
+========================== */
+@media (max-width: 480px) {
+  /* 🔥 1. 분석 영역 완전 재정의 */
+  .analysis-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 24px !important;
     width: 100% !important;
-    /*height: auto !important;*/
-    max-width: 320px; /* 모바일 기준 안정 크기 */
-    margin: 0 auto;
+    max-width: 100% !important;
+  }
+
+  .preview-column {
+    width: 100% !important;
+    max-width: 340px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  /* 🔥 2. 미리보기 완전 고정 (깨짐 방지) */
+  .preview-wrapper {
+    position: relative !important;
+    width: 320px !important;
+    height: 320px !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    background: #f3f5ff !important;
+    border: 1px solid #dbe2ff !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important; /* 크기 변형 방지 */
   }
 
   #preview {
-    height: 100%;
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
   }
 
-  #resultText, #result {
-    max-width: 360px;
-    margin: 0 auto;
+  /* 🔥 3. 크롭 버튼 위치 고정 */
+  .crop-overlay-btn {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 12px !important;
+    z-index: 10 !important;
   }
 
-  .capture-circle {
-    width: 50px;
-    height: 50px;
-    border-width: 3px;
-  }
-  .upload-btn,
-  .camera-btn,
-  .predict-btn {
-    padding: 6px 12px;
-    font-size: 14px;
-    border: none;
-  }
-  .action-buttons {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
+  /* 🔥 4. 결과 박스 완전 제어 */
+  .result-box {
+    width: 320px !important;
+    max-width: 100% !important;
+    min-height: 300px !important;
+    margin: 0 auto !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
   }
 
-.shop-links {
-    justify-content: center; /* 가운데 정렬 유지 */
-    gap: 10px;             /* 이미지 간격 축소 */
+  /* 🔥 5. 백업 패널 (오른쪽 쏠림 방지) */
+  #comparePanel {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 24px 0 !important;
+    padding: 16px !important;
+    clear: both !important; /* 플로트 초기화 */
+    box-sizing: border-box !important;
   }
 
-/* 컨테이너 */
-.shop-links a {
-  display: block;
-  position: relative;
-  text-decoration: none;
-  overflow: visible; /*hidden*/
-  width: 120px;
-  height: 150px;
-  border-radius: 10px;     /* 둥근 모서리 유지 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  .compare-slots {
+    display: flex !important;
+    gap: 12px !important;
+    width: max-content !important;
+    overflow-x: auto !important;
+    padding: 8px 0 !important;
+  }
 
-/* 비교 카드 개별 박스 */
-.compare-slot {
-  flex-shrink: 0;         /* 🔥 줄어들지 않게 */
-  width: 70%;           /* 개별 박스 크기 */
-}
+  .compare-card, .compare-slot {
+    flex: 0 0 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+  }
 
-.compare-slots { /*컨테이너들 사이*/
-  display: flex;
-  gap: 15px;
-  margin-top: 0px;
-}
-
-  /* 모바일 방명록 컨테이너 */
-  #contact.contact-section .contact-container {
+  /* 🔥 6. 컨테이너 강제 중앙 정렬 */
+  #home .container {
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+    padding: 24px 16px !important;
+    display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
   }
-  #contact.contact-section #guestbookFeed {
-    max-height: 300px !important;
+
+  /* 🔥 7. 쇼핑 링크 고정 */
+  .shop-links {
+    width: 100% !important;
+    max-width: 340px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: center !important;
+    margin: 20px auto !important;
+  }
+
+  .shop-links a {
+    width: 160px !important;
+    height: 130px !important;
+    flex: 1 1 160px !important;
+  }
+
+  /* 🔥 8. 액션 버튼들 중앙 */
+  .action-buttons {
+    width: 100% !important;
+    max-width: 320px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin: 0 auto !important;
+  }
+
+  /* 🔥 9. 모든 overflow 제어 */
+  #home, #home .container, .analysis-row {
+    overflow-x: hidden !important;
+  }
+
+  /* 🔥 10. 스크롤바 숨김 */
+  #comparePanel::-webkit-scrollbar {
+    height: 4px !important;
   }
 }
+
+/* 🔥 초소형 화면 추가 보강 */
+@media (max-width: 360px) {
+  .preview-wrapper, .result-box {
+    width: 300px !important;
+  }
+  
+  .compare-card {
+    flex: 0 0 240px !important;
+  }  
+  
+/* ========================
+   🔥 방명록 모바일 세로 (최고 우선순위 !!)
+========================== */
+@media (max-width: 480px) {
+  div.container.contact-container,
+  #contact > div[class*="contact-container"],
+  #contact .contact-container {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  /* 🔥 1단계: 컨테이너 강제 세로 */
+  #contact .contact-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    width: 100% !important;
+    padding: 20px !important !important;
+  }
+
+  /* 🔥 2단계: 좌우 박스 전체 너비 */
+  #contact .contact-left,
+  #contact .contact-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 🔥 3단계: 입력폼 상단 넉넉 */
+  #contact .contact-left {
+    padding: 32px 24px !important;
+    min-height: 320px !important;
+  }
+
+  /* 🔥 4단계: 피드 하단 풀스크롤 */
+  #contact .contact-right {
+    padding: 28px 24px !important;
+    min-height: 360px !important;
+  }
+
+  /* 🔥 5단계: 모든 입력 100% */
+  #contact input,
+  #contact textarea,
+  #contact button[type="submit"] {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 🔥 6단계: 피드 스크롤 */
+  #guestbookFeed {
+    max-height: 360px !important;
+    overflow-y: auto !important;
+    width: 100% !important;
+  }
+}
+
