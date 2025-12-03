@@ -1314,7 +1314,7 @@ input:checked + .slider:before {
 @media (max-width: 480px) {
   /* 🔥 1. 헤더 전체 압축 */
   header {
-    padding: 12px 16px !important;
+    padding: 20px 16px !important;
     min-height: 60px !important; /* 높이 고정 */
     position: sticky !important;
     top: 0 !important;
@@ -1358,7 +1358,7 @@ input:checked + .slider:before {
   /* 🔥 4. 네비 링크 (작고 촘촘) */
   nav a {
     font-size: 14px !important;
-    padding: 6px 10px !important; /* 터치 44px 기준 */
+    padding: 6px 0px !important; /* 터치 44px 기준 */
     margin: 0 !important;
     border-radius: 8px !important;
     min-width: 44px !important; /* 터치 영역 보장 */
@@ -1412,7 +1412,7 @@ input:checked + .slider:before {
 
   /* 🔥 8. 홈 섹션 상단 여백 보정 */
   #home {
-    padding-top: 80px !important; /* 헤더 60px + 여백 */
+    padding-top: 20px !important; /* 헤더 60px + 여백 */
   }
 }
 
@@ -1616,4 +1616,34 @@ input:checked + .slider:before {
     width: 100% !important;
   }
 }
+
+@media (max-width: 480px) {
+  #contact.contact-section .contact-container,
+  #contact .contact-container,
+  .contact-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 16px !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  #contact .contact-left,
+  #contact .contact-right,
+  .contact-left,
+  .contact-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+    display: block !important;
+  }
+
+  #guestbookFeed {
+    max-height: 350px !important;
+    width: 100% !important;
+  }
+}
+
 
