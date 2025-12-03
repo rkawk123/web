@@ -1564,14 +1564,14 @@ input:checked + .slider:before {
 /* ========================
    🔥 방명록 모바일 세로 (최고 우선순위 !!)
 ========================== */
-@media (max-width: 480px) {
-  /*div.container.contact-container,
+/*@media (max-width: 480px) {
+  div.container.contact-container,
   #contact > div[class*="contact-container"],
   #contact .contact-container {
     flex-direction: column !important;
     width: 100% !important;
   }
-  /* 🔥 1단계: 컨테이너 강제 세로 *
+  /* 🔥 1단계: 컨테이너 강제 세로 
   #contact .contact-container {
     display: flex !important;
     flex-direction: column !important;
@@ -1580,7 +1580,7 @@ input:checked + .slider:before {
     padding: 20px !important !important;
   }
 
-  /* 🔥 2단계: 좌우 박스 전체 너비 *
+  /* 🔥 2단계: 좌우 박스 전체 너비 
   #contact .contact-left,
   #contact .contact-right {
     width: 100% !important;
@@ -1618,9 +1618,9 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 480px) {
-  #contact.contact-section .contact-container,
-  #contact .contact-container,
-  .contact-container {
+
+  /* contact 섹션 컨테이너만 세로 정렬 */
+  #contact .contact-container {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
@@ -1630,18 +1630,19 @@ input:checked + .slider:before {
     box-sizing: border-box !important;
   }
 
+  /* 좌/우 박스를 전체 폭으로 */
   #contact .contact-left,
-  #contact .contact-right,
-  .contact-left,
-  .contact-right {
+  #contact .contact-right {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
     display: block !important;
   }
 
-  #guestbookFeed {
+  /* 방명록 피드 높이 */
+  #contact #guestbookFeed {
     max-height: 350px !important;
     width: 100% !important;
   }
 }
+
