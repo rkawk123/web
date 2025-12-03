@@ -657,7 +657,7 @@ async function runPrediction(uploadFile) {
   }
 
   try {
-    const res = await fetch(API_STREAM, { method: "POST", body: fd, , signal: currentController.signal });
+    const res = await fetch(API_STREAM, { method: "POST", body: fd, signal: currentController.signal });
 
     if (!res.ok) {
       const errText = await res.text();
