@@ -1578,16 +1578,16 @@ input:checked + .slider:before {
     gap: 24px !important;
     width: 100% !important;
     padding: 20px !important !important;
-  }
+  }*/
 
-  /* 🔥 2단계: 좌우 박스 전체 너비 
+  /* 🔥 2단계: 좌우 박스 전체 너비 */
   #contact .contact-left,
   #contact .contact-right {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
     box-sizing: border-box !important;
-  }*/
+  }
 
   /* 🔥 3단계: 입력폼 상단 넉넉 */
   #contact .contact-left {
@@ -1618,29 +1618,28 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 480px) {
-
-  /* contact 섹션 컨테이너만 세로 정렬 */
   #contact .contact-container {
     display: flex !important;
     flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 0 16px !important;
     gap: 20px !important;
+    padding: 0 16px !important;
     box-sizing: border-box !important;
   }
 
-  /* 좌/우 박스를 전체 폭으로 */
+  /* 왼쪽/오른쪽 박스 둘 다 전체폭 */
   #contact .contact-left,
   #contact .contact-right {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
-    display: block !important;
   }
 
-  /* 방명록 피드 높이 */
-  #contact #guestbookFeed {
+  /* 피드 높이 조정 */
+  #guestbookFeed {
     max-height: 350px !important;
     width: 100% !important;
   }
