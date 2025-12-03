@@ -396,8 +396,6 @@ function renderCompareSlots() {
   });
 }
 
-
-
 function handleCompareStart() {
   const hasResult =
     ($result && $result.innerHTML.trim()) ||
