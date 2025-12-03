@@ -1559,7 +1559,8 @@ input:checked + .slider:before {
   
   .compare-card {
     flex: 0 0 240px !important;
-  }  
+  }
+}
   
 /* ========================
    🔥 방명록 + 피드 모바일 세로 정렬 완전 고정
