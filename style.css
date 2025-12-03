@@ -1562,62 +1562,11 @@ input:checked + .slider:before {
   }  
   
 /* ========================
-   🔥 방명록 모바일 세로 (최고 우선순위 !!)
+   🔥 방명록 + 피드 모바일 세로 정렬 완전 고정
 ========================== */
-/*@media (max-width: 480px) {
-  div.container.contact-container,
-  #contact > div[class*="contact-container"],
-  #contact .contact-container {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-  /* 🔥 1단계: 컨테이너 강제 세로 
-  #contact .contact-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 24px !important;
-    width: 100% !important;
-    padding: 20px !important !important;
-  }*/
-
-  /* 🔥 2단계: 좌우 박스 전체 너비 */
-  #contact .contact-left,
-  #contact .contact-right {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 🔥 3단계: 입력폼 상단 넉넉 */
-  #contact .contact-left {
-    padding: 32px 24px !important;
-    min-height: 320px !important;
-  }
-
-  /* 🔥 4단계: 피드 하단 풀스크롤 */
-  #contact .contact-right {
-    padding: 28px 24px !important;
-    min-height: 360px !important;
-  }
-
-  /* 🔥 5단계: 모든 입력 100% */
-  #contact input,
-  #contact textarea,
-  #contact button[type="submit"] {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 🔥 6단계: 피드 스크롤 */
-  #guestbookFeed {
-    max-height: 360px !important;
-    overflow-y: auto !important;
-    width: 100% !important;
-  }
-}
-
 @media (max-width: 480px) {
+
+  /* 컨테이너 전체를 세로로 */
   #contact .contact-container {
     display: flex !important;
     flex-direction: column !important;
@@ -1625,23 +1574,34 @@ input:checked + .slider:before {
     align-items: stretch !important;
     width: 100% !important;
     max-width: 100% !important;
-    gap: 20px !important;
+    gap: 24px !important;
     padding: 0 16px !important;
     box-sizing: border-box !important;
   }
 
-  /* 왼쪽/오른쪽 박스 둘 다 전체폭 */
+  /* 입력폼 + 피드 상자 모두 전체폭 */
   #contact .contact-left,
   #contact .contact-right {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
+    box-sizing: border-box !important;
   }
 
-  /* 피드 높이 조정 */
+  /* 입력폼 padding 조정 */
+  #contact .contact-left {
+    padding: 24px 16px !important;
+  }
+
+  /* 피드 박스 padding 조정 */
+  #contact .contact-right {
+    padding: 24px 16px !important;
+  }
+
+  /* 피드 스크롤 고정 */
   #guestbookFeed {
-    max-height: 350px !important;
+    max-height: 360px !important;
+    overflow-y: auto !important;
     width: 100% !important;
   }
 }
-
