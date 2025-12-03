@@ -176,10 +176,10 @@ if ($wrongBtn && $correctionForm) {
 // =========================
 function showMessage(msg, duration = 2000) {
   const box = document.getElementById("message-box");
-  if (!box) {
+  /*if (!box) {
     alert(msg);
     return;
-  }
+  }*/
 
   box.textContent = msg;
   box.classList.add("show");
@@ -425,6 +425,7 @@ function handleCompareStart() {
   if (compareHistory.length >= MAX_COMPARE) {
     showMessage("최대 4개까지 기록됩니다. 새로 분석하기만 가능해요!");
   }
+  //goToInitialState();
 }
 
 function handleNewAnalysis() {
@@ -499,7 +500,24 @@ async function startDemoLoop() {
 
 function stopDemoLoop() {
   demoRunning = false;
-  goToInitialState();
+  if (currentController) {
+      currentController.abort();
+    }
+    //모든 setInterval 제거
+    if (window.__fabric_slide_interval_id) {
+      clearInterval(window.__fabric_slide_interval_id);
+      window.__fabric_slide_interval_id = null;
+    }
+    //모든 setTimeout 초기화
+    if (idleTimer) {
+      clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+    goToInitialState();
+    //비교 기록 전체 초기화
+    compareActive = false;
+    compareHistory = [];
+    handleNewAnalysis();
 }
 
 // UI 잠금/해제
