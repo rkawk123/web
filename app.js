@@ -1088,15 +1088,29 @@ function initGuestbook() {
       btn.addEventListener('click', () => {
         if (confirm('정말 삭제할까요?')) {
           const id = parseInt(btn.dataset.id);
-          const newList = list.filter(item => item.id !== id);
-          
-          // 로컬 저장 + 화면 갱신 + 상태 갱신
-          saveGuestbook(newList);
-          renderFeed(newList); // 재렌더링 → 상태 자동 갱신
-          showMessage(`🗑️ 삭제됨 (${newList.length}개 남음)`);
+    
+          // 1) 서버에 삭제 요청
+          fetch(`${API_guestbook}/delete/${id}`, {
+            method: "DELETE"
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === "ok") {
+    
+              // 2) 로컬에서도 제거
+              const newList = list.filter(item => item.id !== id);
+              saveGuestbook(newList);
+              renderFeed(newList);
+    
+              showMessage(`🗑️ 삭제됨 (${newList.length}개 남음)`);
+            } else {
+              alert("삭제 실패");
+            }
+          });
         }
       });
     });
+
 
     // ✅ 상태 갱신
     updateStatus(list.length);
