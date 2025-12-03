@@ -1565,48 +1565,39 @@ input:checked + .slider:before {
    🔥 방명록 + 피드 모바일 세로 정렬 완전 고정
 ========================== */
 @media (max-width: 480px) {
-
-  /* 컨테이너 전체를 세로로 */
-  #contact .contact-container {
+  /* 🔥 최우선: container의 기본 flex/grid 속성 무력화 */
+  #contact .container.contact-container {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
     align-items: stretch !important;
+    justify-content: flex-start !important;
     width: 100% !important;
     max-width: 100% !important;
-    gap: 24px !important;
+    gap: 20px !important;
     padding: 0 16px !important;
     box-sizing: border-box !important;
   }
 
-  /* 입력폼 + 피드 상자 모두 전체폭 */
+  /* 🔥 좌/우 박스 100% 확장 */
   #contact .contact-left,
   #contact .contact-right {
     width: 100% !important;
     max-width: 100% !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 입력폼 padding 조정 */
-  #contact .contact-left {
-    padding: 24px 16px !important;
-  }
-
-  /* 피드 박스가 사라지는 현상 방지 */
-  #contact .contact-right {
     display: block !important;
+  }
+
+  /* 피드 영역 다시 표시 + 높이 복구 */
+  #contact .contact-right {
     min-height: 360px !important;
     height: auto !important;
     overflow: visible !important;
   }
 
-  /* 피드 내부 스크롤 확실하게 보이도록 */
   #guestbookFeed {
-    display: block !important;
     max-height: 360px !important;
-    height: auto !important;
     overflow-y: auto !important;
-    visibility: visible !important;
+    display: block !important;
     opacity: 1 !important;
+    visibility: visible !important;
   }
+}
