@@ -1593,15 +1593,20 @@ input:checked + .slider:before {
     padding: 24px 16px !important;
   }
 
-  /* 피드 박스 padding 조정 */
+  /* 피드 박스가 사라지는 현상 방지 */
   #contact .contact-right {
-    padding: 24px 16px !important;
+    display: block !important;
+    min-height: 360px !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
-  /* 피드 스크롤 고정 */
+  /* 피드 내부 스크롤 확실하게 보이도록 */
   #guestbookFeed {
+    display: block !important;
     max-height: 360px !important;
+    height: auto !important;
     overflow-y: auto !important;
-    width: 100% !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
-}
