@@ -576,7 +576,7 @@ if ($toggle) {
   });
 }
 
-// 3분 Idle → 자동 데모 ON
+/* 3분 Idle → 자동 데모 ON
 function resetIdleTimer() {
   if (idleTimer) clearTimeout(idleTimer);
 
@@ -588,7 +588,7 @@ function resetIdleTimer() {
       updateTooltipText();
     }
   }, 3 * 60 * 1000);
-}
+}*/
 
 window.addEventListener("load", async () => {
   try {
